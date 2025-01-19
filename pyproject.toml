@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "bili-jeans"
+version = "0.0.1"
+description = "Download available resources from Bilibili"
+authors = ["Chaojie Yan <ushareroses@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "7.34.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
