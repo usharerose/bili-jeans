@@ -1,0 +1,14 @@
+services:
+
+  bili-jeans-build:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev
+    image: bili-jeans:${IMAGE_TAG:-latest}
+
+  bili-jeans-run:
+    image: bili-jeans:${IMAGE_TAG:-latest}
+    volumes:
+      - ./:/app/bili-jeans/
+    command: ["tail", "-f", "/dev/null"]
