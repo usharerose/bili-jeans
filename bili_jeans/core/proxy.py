@@ -2,9 +2,11 @@
 Proxy Interface on Bilibili API
 """
 import json
-from typing import Awaitable, Dict, Optional
+from typing import Dict, Optional
 
 import aiohttp
+
+from .schemes import GetUGCViewResponse
 
 
 HEADERS = {
@@ -30,7 +32,16 @@ async def get_ugc_view(
     bvid: Optional[str] = None,
     aid: Optional[int] = None,
     sess_data: Optional[str] = None
-) -> Awaitable[Dict]:
+) -> GetUGCViewResponse:
+    data = await get_ugc_view_response(bvid, aid, sess_data)
+    return GetUGCViewResponse.model_validate(data)
+
+
+async def get_ugc_view_response(
+    bvid: Optional[str] = None,
+    aid: Optional[int] = None,
+    sess_data: Optional[str] = None
+) -> Dict:
     """
     get UGC resource meta info which is with '/video' namespace
     support being requested byf one of BV ID (which has higher priority) and AV ID
