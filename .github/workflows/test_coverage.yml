@@ -1,0 +1,45 @@
+name: Coverage
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  update-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        env:
+          POETRY_VERSION: 1.8.3
+          POETRY_NO_INTERACTION: 1
+          POETRY_VIRTUALENVS_CREATE: false
+        run: |
+          pip install poetry
+          poetry install
+      - name: Run unittest cases
+        run: make test
+
+      - name: Test coverage comment
+        uses: MishaKav/pytest-coverage-comment@v1.1.53
+        id: coverageComment
+        with:
+          junitxml-path: cover/pytest.xml
+          pytest-xml-coverage-path: cover/cov.xml
+
+      - name: Create the Badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 37bd5abc9fe5172ec6df11ce899f2f3b
+          filename: badge.json
+          label: coverage
+          message: ${{ steps.coverageComment.outputs.coverage }}
+          color: ${{ steps.coverageComment.outputs.color }}
+          namedLogo: python
