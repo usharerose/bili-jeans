@@ -22,7 +22,7 @@ type-hintd: build clean-container
 	docker-compose up --exit-code-from bili-jeans-type-hint bili-jeans-type-hint
 
 test:
-	python -m pytest -sv --disable-warnings -p no:cacheprovider tests
+	python -m pytest -sv --cov-report term-missing --cov-report html:cover --cov-report xml:cover/cov.xml --junitxml=cover/pytest.xml --cov=bili_jeans/ --disable-warnings -p no:cacheprovider tests
 
 testd: build clean-container
 	docker-compose up --exit-code-from bili-jeans-test bili-jeans-test

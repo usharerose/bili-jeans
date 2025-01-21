@@ -9,3 +9,8 @@
 # Poetry configuration
 poetry.toml
 .venv
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+cover/
