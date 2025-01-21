@@ -12,3 +12,15 @@ services:
     volumes:
       - ./:/app/bili-jeans/
     command: ["tail", "-f", "/dev/null"]
+
+  bili-jeans-lint:
+    image: bili-jeans:${IMAGE_TAG:-latest}
+    command: make lint
+
+  bili-jeans-type-hint:
+    image: bili-jeans:${IMAGE_TAG:-latest}
+    command: make type-hint
+
+  bili-jeans-test:
+    image: bili-jeans:${IMAGE_TAG:-latest}
+    command: make test
