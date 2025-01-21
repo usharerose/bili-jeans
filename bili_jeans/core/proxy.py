@@ -6,26 +6,8 @@ from typing import Dict, Optional
 
 import aiohttp
 
+from .constants import HEADERS, TIMEOUT, URL_WEB_UGC_VIEW
 from .schemes import GetUGCViewResponse
-
-
-HEADERS = {
-    'origin': 'https://www.bilibili.com',
-    'referer': 'https://www.bilibili.com/',
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
-                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-    'accept': 'application/json, text/plain, */*',
-    'Sec-Ch-Ua': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-    'Sec-Ch-Ua-Mobile': '?0',
-    'Sec-Ch-Ua-Platform': '"macOS"',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-site'
-}
-TIMEOUT = 5
-
-
-URL_WEB_UGC_VIEW = 'https://api.bilibili.com/x/web-interface/view'
 
 
 async def get_ugc_view(
@@ -62,7 +44,8 @@ async def get_ugc_view_response(
         async with session.get(
             URL_WEB_UGC_VIEW,
             params=params,
-            headers=HEADERS
+            headers=HEADERS,
+            timeout=aiohttp.ClientTimeout(total=float(TIMEOUT))
         ) as response:
             content = await response.read()
             data = json.loads(content.decode('utf-8'))
