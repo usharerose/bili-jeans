@@ -1,11 +1,19 @@
 """
 Factory on instance according to resource type
 """
+import logging
 import re
 from typing import Optional
 from urllib.parse import urlparse
 
+import aiohttp
+from aiohttp import ClientResponse
 from pydantic import BaseModel
+
+from .constants import HEADERS, TIMEOUT
+
+
+logger = logging.getLogger(__name__)
 
 
 BVID_LENGTH = 9
@@ -25,11 +33,33 @@ class WebViewMetaData(BaseModel):
     bvid: Optional[str] = None
 
 
-def parse_web_view_url(url: str) -> WebViewMetaData:
+async def parse_web_view_url(url: str) -> WebViewMetaData:
     """
     extract metadata from web view URL
+
+    before parsing it, the HTTP request to the given Url
+    would be sent for getting the redirecting destination Url
     """
-    url_path = urlparse(url).path
+    dest_url = url
+    response: Optional[ClientResponse] = None
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(
+                url,
+                headers=HEADERS,
+                timeout=aiohttp.ClientTimeout(total=float(TIMEOUT)),
+                allow_redirects=False
+            ) as resp:
+                response = resp
+        except Exception:
+            logger.warning(
+                f'Parse web view Url failed when initiate HTTP request: {url}'
+            )
+            pass
+    if response is not None:
+        dest_url = response.headers.get('location', url)
+
+    url_path = urlparse(dest_url).path
     for path_pattern in (WEB_VIEW_URL_UGC_BVID_PATTERN, WEB_VIEW_URL_UGC_AVID_PATTERN):
         search_result = path_pattern.search(url_path)
         if search_result:
@@ -40,4 +70,6 @@ def parse_web_view_url(url: str) -> WebViewMetaData:
                 func_name(search_result.group(1))
             )
             return metadata
-    raise ValueError(f'Invalid Url: {url}')
+    raise ValueError(
+        f'Invalid Url. source Url: {url}, destination Url: {dest_url}'
+    )
