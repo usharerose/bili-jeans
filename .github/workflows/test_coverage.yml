@@ -2,11 +2,13 @@ name: Coverage
 
 on:
   push:
-    branches: [master]
+#    branches: [master]
 
 jobs:
   update-coverage:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
@@ -37,8 +39,8 @@ jobs:
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{ secrets.GIST_SECRET }}
-          gistID: 37bd5abc9fe5172ec6df11ce899f2f3b
-          filename: badge.json
+          gistID: c65ba5e2d677f56558295d6c6d2556b7
+          filename: bili_jeans_test_cov_badge.json
           label: coverage
           message: ${{ steps.coverageComment.outputs.coverage }}
           color: ${{ steps.coverageComment.outputs.color }}
