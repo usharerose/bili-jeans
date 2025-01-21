@@ -50,6 +50,7 @@ async def test_get_ugc_view_with_wrong_resources(mock_get_req):
     assert actual_dm.ttl == 1
     assert actual_dm.data is None
 
+
 @patch('aiohttp.ClientSession.get')
 async def test_get_ugc_view_basic_info(mock_get_req):
     mock_get_req.return_value.__aenter__.return_value = get_mock_async_response(
@@ -127,7 +128,7 @@ async def test_get_ugc_view_pages(mock_get_req):
     assert isinstance(actual_pages, list)
     assert len(actual_pages) == 1
 
-    sample_actual_page, *_ =  actual_pages
+    sample_actual_page, *_ = actual_pages
     assert sample_actual_page.cid == 239927346
     assert sample_actual_page.duration == 177
     assert sample_actual_page.page == 1
@@ -187,6 +188,7 @@ async def test_get_ugc_view_ugc_season_basic_info(mock_get_req):
     assert actual_ugc_season.intro == expected_ugc_season_intro
     assert actual_ugc_season.mid == 642389251
     assert actual_ugc_season.title == '《黑神话：悟空》6分钟实机剧情片段'
+
 
 @patch('aiohttp.ClientSession.get')
 async def test_get_ugc_view_section_basic_info(mock_get_req):
