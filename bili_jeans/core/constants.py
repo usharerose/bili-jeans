@@ -25,4 +25,5 @@ TIMEOUT = 5
 ################
 # Bilibili API #
 ################
+URL_WEB_UGC_PLAY = 'https://api.bilibili.com/x/player/wbi/playurl'
 URL_WEB_UGC_VIEW = 'https://api.bilibili.com/x/web-interface/view'
