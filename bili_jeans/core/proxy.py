@@ -12,7 +12,7 @@ from .constants import (
     URL_WEB_UGC_PLAY,
     URL_WEB_UGC_VIEW
 )
-from .schemes import GetUGCViewResponse
+from .schemes import GetUGCPlayResponse, GetUGCViewResponse
 
 
 async def get_ugc_view(
@@ -55,6 +55,19 @@ async def get_ugc_view_response(
             content = await response.read()
             data = json.loads(content.decode('utf-8'))
             return data
+
+
+async def get_ugc_play(
+    cid: int,
+    bvid: Optional[str] = None,
+    aid: Optional[int] = None,
+    qn: Optional[int] = None,
+    fnval: int = 16,
+    fourk: int = 1,
+    sess_data: Optional[str] = None
+) -> GetUGCPlayResponse:
+    data = await get_ugc_play_response(cid, bvid, aid, qn, fnval, fourk, sess_data)
+    return GetUGCPlayResponse.model_validate(data)
 
 
 async def get_ugc_play_response(

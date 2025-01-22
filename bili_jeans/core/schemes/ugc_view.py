@@ -1,18 +1,11 @@
 """
-Scheme definition for type hint
+Scheme definition of the response from https://api.bilibili.com/x/web-interface/wbi/view
 """
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-
-class BaseResponseModel(BaseModel):
-    """
-    Base of Bilibili API response
-    """
-    code: int = 0              # status code
-    message: str = '0'         # error message
-    ttl: Optional[int] = None
+from .base import BaseResponseModel
 
 
 class GetUGCViewDataOwner(BaseModel):
