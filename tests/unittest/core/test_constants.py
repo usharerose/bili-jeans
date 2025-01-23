@@ -1,6 +1,7 @@
 import pytest
 
 from bili_jeans.core.constants import (
+    CodecId,
     FormatNumberValue,
     QualityNumber
 )
@@ -57,3 +58,12 @@ def test_format_number_value_get_dash_fnval_for_eight_k():
         QualityNumber.EIGHT_K.value,
         False
     ) == 1168  # 010010010000
+
+
+def test_codec_id_from_value():
+    assert CodecId.from_value(13) == CodecId.AV1
+
+
+def test_codec_id_from_invalid_value():
+    with pytest.raises(ValueError, match='Invalid given codec Id: 0'):
+        CodecId.from_value(0)

@@ -144,3 +144,24 @@ class FormatNumberValue(IntEnum):
         if qn == QualityNumber.EIGHT_K:
             result = result | cls.EIGHT_K
         return result
+
+
+############
+# Codec Id #
+############
+class CodecId(IntEnum):
+    """
+    AVC, which is avc1.64001E, not support 8K
+    HEVC, which is hev1.1.6.L120.90
+    AV1, which is av01.0.00M.10.0.110.01.01.01.0
+    """
+    AVC = 7
+    HEVC = 12
+    AV1 = 13
+
+    @classmethod
+    def from_value(cls, codec_id: int) -> 'CodecId':
+        for item in cls:
+            if item == codec_id:
+                return item
+        raise ValueError(f'Invalid given codec Id: {codec_id}')
