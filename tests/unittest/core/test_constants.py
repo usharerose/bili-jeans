@@ -1,6 +1,7 @@
 import pytest
 
 from bili_jeans.core.constants import (
+    BitRateId,
     CodecId,
     FormatNumberValue,
     QualityNumber
@@ -67,3 +68,15 @@ def test_codec_id_from_value():
 def test_codec_id_from_invalid_value():
     with pytest.raises(ValueError, match='Invalid given codec Id: 0'):
         CodecId.from_value(0)
+
+
+def test_bit_rate_id_from_value():
+    assert BitRateId.from_value(30280) == BitRateId.BPS_192K
+
+
+def test_bit_rate_id_from_invalid_value():
+    with pytest.raises(
+        ValueError,
+        match='Invalid given Bit Rate Id: 0'
+    ):
+        BitRateId.from_value(0)
