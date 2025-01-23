@@ -2,6 +2,7 @@
 Constants
 """
 from enum import IntEnum
+from functools import reduce
 
 
 ###############################
@@ -78,3 +79,68 @@ class QualityNumber(IntEnum):
             if item == qn:
                 return item
         raise ValueError(f'Invalid given quality number : {qn}')
+
+
+#######################
+# Format Number Value #
+#######################
+class FormatNumberValue(IntEnum):
+    """
+    integer type value of a binary bitmap standing for multi-attribute combination
+    | value | description         | comment                                             |
+    |-------+---------------------+-----------------------------------------------------|
+    | 0     | FLV                 | exclusive with MP4 and DASH, deprecated             |
+    | 1     | MP4                 | exclusive with FLV and DASH                         |
+    | 16    | DASH                | exclusive with FLV and MP4                          |
+    | 64    | HDR or not          | DASH is necessary, VIP needed, only H.265, `qn=125` |
+    | 128   | 4K or not           | VIP needed, `fourk=1` and `qn=120`                  |
+    | 256   | Dolby sound or not  | DASH is necessary, VIP needed                       |
+    | 512   | Dolby vision or not | DASH is necessary, VIP needed                       |
+    | 1024  | 8K or not           | DASH is necessary, VIP needed, `qn=127`             |
+    | 2048  | AV1 codec or not    | DASH is necessary                                   |
+    support 'or' for combination,
+    e.g. DASH format, and HDR, fnval = 16 | 64 = 80
+    """
+    # FLV = 0           # deprecated
+    MP4 = 1             # binary opposite to DASH
+    DASH = 16
+    HDR = 64
+    FOUR_K = 128
+    DOLBY_AUDIO = 256
+    DOLBY_VISION = 512
+    EIGHT_K = 1024
+    AV1_ENCODE = 2048
+
+    @classmethod
+    def get_dash_full_fnval(cls) -> int:
+        return reduce(
+            lambda prev, cur: prev | cur,
+            [item.value for item in cls if item != cls.MP4]
+        )
+
+    @classmethod
+    def get_dash_fnval(
+        cls,
+        qn: int,
+        is_dolby_audio: bool = False
+    ) -> int:
+        """
+        get DASH-based format number value according to Quality Number
+        :param qn: format quality number
+        :type qn: int
+        :param is_dolby_audio: request Dolby Audio or not
+        :type is_dolby_audio: bool
+        :return: int
+        """
+        result = cls.DASH.value
+        if qn == QualityNumber.HDR:
+            result = result | cls.HDR
+        if qn >= QualityNumber.FOUR_K:
+            result = result | cls.FOUR_K
+        if is_dolby_audio:
+            result = result | cls.DOLBY_AUDIO
+        if qn == QualityNumber.DOLBY:
+            result = result | cls.DOLBY_VISION
+        if qn == QualityNumber.EIGHT_K:
+            result = result | cls.EIGHT_K
+        return result
