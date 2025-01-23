@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
+from bili_jeans.core.constants import QualityNumber
 from bili_jeans.core.proxy import get_ugc_play
 from tests.utils import get_mock_async_response, MOCK_SESS_DATA
 
@@ -555,7 +556,7 @@ async def test_get_ugc_play_by_aid(mock_get_req):
     actual_dm = await get_ugc_play(
         cid=239927346,
         aid=842089940,
-        qn=112,
+        qn=QualityNumber.PPLUS_1080.value,
         fnval=16,
         fourk=1,
         sess_data=MOCK_SESS_DATA
