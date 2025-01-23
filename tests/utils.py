@@ -43,3 +43,6 @@ def get_mock_async_response(
         MockAsyncResponse(status_code, content, headers)
     )
     return mock_resp
+
+
+MOCK_SESS_DATA = 'SESSDATA'

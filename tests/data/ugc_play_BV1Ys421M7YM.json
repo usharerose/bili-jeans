@@ -1,0 +1,51 @@
+{
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "from": "local",
+    "result": "suee",
+    "message": "",
+    "quality": 32,
+    "format": "mp4",
+    "timelength": 4486528,
+    "accept_format": "mp4",
+    "accept_description": [
+      "试看"
+    ],
+    "accept_quality": [
+      32
+    ],
+    "video_codecid": 7,
+    "seek_param": "start",
+    "seek_type": "second",
+    "durl": [
+      {
+        "order": 1,
+        "length": 1050160,
+        "size": 60154454,
+        "ahead": "",
+        "vhead": "",
+        "url": "https://xy120x209x212x6xy2409y8730ye0efy10yy20xy.mcdn.bilivideo.cn:4483/upgcxcode/14/88/1566548814/1566548814_u1-1-29.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1737616642&gen=playurlv2&os=mcdn&oi=0&trid=0000ec1a95a2a70345d0838d6ab96b1ed47eu&mid=0&platform=pc&og=cos&upsig=2fdc0b1baebb194ac3de41090d75060d&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&mcdnid=50016813&bvc=vod&nettype=0&orderid=0,3&buvid=&build=0&f=u_0_0&agrr=0&bw=57289&logo=A0020000",
+        "backup_url": [
+          "https://upos-sz-mirrorcos.bilivideo.com/upgcxcode/14/88/1566548814/1566548814_u1-1-29.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1737616642&gen=playurlv2&os=cosbv&oi=0&trid=ec1a95a2a70345d0838d6ab96b1ed47eu&mid=0&platform=pc&og=cos&upsig=6043548050387bf62e4ad78e0270fec0&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&bvc=vod&nettype=0&orderid=1,3&buvid=&build=0&f=u_0_0&agrr=0&bw=57289&logo=40000000",
+          "https://upos-sz-mirrorcos.bilivideo.com/upgcxcode/14/88/1566548814/1566548814_u1-1-29.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfqXBvEqxTEto8BTrNvN0GvT90W5JZMkX_YN0MvXg8gNEV4NC8xNEV4N03eN0B5tZlqNxTEto8BTrNvNeZVuJ10Kj_g2UB02J0mN0B5tZlqNCNEto8BTrNvNC7MTX502C8f2jmMQJ6mqF2fka1mqx6gqj0eN0B599M=&uipk=5&nbs=1&deadline=1737616642&gen=playurlv2&os=cosbv&oi=0&trid=ec1a95a2a70345d0838d6ab96b1ed47eu&mid=0&platform=pc&og=cos&upsig=6043548050387bf62e4ad78e0270fec0&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&bvc=vod&nettype=0&orderid=2,3&buvid=&build=0&f=u_0_0&agrr=0&bw=57289&logo=40000000"
+        ]
+      }
+    ],
+    "support_formats": [
+      {
+        "quality": 32,
+        "format": "mp4",
+        "new_description": "试看",
+        "display_desc": "试看",
+        "superscript": "",
+        "codecs": null
+      }
+    ],
+    "high_format": null,
+    "last_play_time": 0,
+    "last_play_cid": 0,
+    "view_info": null
+  }
+}

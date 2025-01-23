@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 
 from bili_jeans.core.proxy import get_ugc_view
-from tests.utils import get_mock_async_response
+from tests.utils import get_mock_async_response, MOCK_SESS_DATA
 
 
 with open('tests/data/ugc_view_BV1X54y1C74U.json', 'r') as fp:
@@ -26,7 +26,10 @@ async def test_get_ugc_view(mock_get_req):
             ensure_ascii=False
         ).encode('utf-8')
     )
-    actual_dm = await get_ugc_view(bvid='BV1X54y1C74U')
+    actual_dm = await get_ugc_view(
+        bvid='BV1X54y1C74U',
+        sess_data=MOCK_SESS_DATA
+    )
 
     assert actual_dm.code == 0
     assert actual_dm.message == '0'
