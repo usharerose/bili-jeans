@@ -1,8 +1,9 @@
 """
 Constants
 """
-from enum import IntEnum
+from enum import Enum, IntEnum
 from functools import reduce
+from typing import NamedTuple
 
 
 ###############################
@@ -165,3 +166,32 @@ class CodecId(IntEnum):
             if item == codec_id:
                 return item
         raise ValueError(f'Invalid given codec Id: {codec_id}')
+
+
+###############
+# Bit Rate Id #
+###############
+class BitRateIdItem(NamedTuple):
+
+    bit_rate_id: int
+    quality: int
+
+
+class BitRateId(Enum):
+    """
+    AVC, which is avc1.64001E, not support 8K
+    HEVC, which is hev1.1.6.L120.90
+    AV1, which is av01.0.00M.10.0.110.01.01.01.0
+    """
+    BPS_64K = BitRateIdItem(bit_rate_id=30216, quality=1)
+    BPS_132K = BitRateIdItem(bit_rate_id=30232, quality=2)
+    BPS_192K = BitRateIdItem(bit_rate_id=30280, quality=3)
+    BPS_DOLBY = BitRateIdItem(bit_rate_id=30250, quality=4)
+    BPS_HIRES = BitRateIdItem(bit_rate_id=30251, quality=5)
+
+    @classmethod
+    def from_value(cls, bit_rate_id: int) -> 'BitRateId':
+        for item in cls:
+            if item.value.bit_rate_id == bit_rate_id:
+                return item
+        raise ValueError(f'Invalid given Bit Rate Id: {bit_rate_id}')
