@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from bili_jeans.core.constants import QualityNumber
+from bili_jeans.core.constants import FormatNumberValue, QualityNumber
 from bili_jeans.core.proxy import get_ugc_play
 from tests.utils import get_mock_async_response, MOCK_SESS_DATA
 
@@ -35,7 +35,7 @@ async def test_get_ugc_play(mock_get_req):
         bvid='BV1X54y1C74U',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data='mock_session_data'
     )
@@ -60,7 +60,7 @@ async def test_get_ugc_play_with_wrong_resources(mock_get_req):
         bvid='BVNotExisted',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -85,7 +85,7 @@ async def test_get_ugc_play_basic_info(mock_get_req):
         bvid='BV1X54y1C74U',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -111,7 +111,7 @@ async def test_get_ugc_play_dash_basic_info(mock_get_req):
         bvid='BV1X54y1C74U',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -137,7 +137,7 @@ async def test_get_ugc_play_dash_audio(mock_get_req):
         bvid='BV1X54y1C74U',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -207,7 +207,7 @@ async def test_get_ugc_play_dash_without_dolby_audio(mock_get_req):
         bvid='BV1X54y1C74U',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -230,7 +230,7 @@ async def test_get_ugc_play_dash_with_dolby_audio(mock_get_req):
         cid=733892245,
         bvid='BV13L4y1K7th',
         qn=None,
-        fnval=4048,
+        fnval=FormatNumberValue.get_dash_full_fnval(),
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -298,7 +298,7 @@ async def test_get_ugc_play_dash_with_hires(mock_get_req):
         cid=25954616353,
         bvid='BV13ht2ejE1S',
         qn=None,
-        fnval=4048,
+        fnval=FormatNumberValue.get_dash_full_fnval(),
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -366,7 +366,7 @@ async def test_get_ugc_play_dash_video(mock_get_req):
         bvid='BV1X54y1C74U',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -435,7 +435,7 @@ async def test_get_paid_ugc_play_without_privilege(mock_get_req):
         bvid='BV1Ys421M7YM',
         aid=1855474163,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1
     )
     actual_data = actual_dm.data
@@ -460,7 +460,7 @@ async def test_get_paid_ugc_play_durl(mock_get_req):
         bvid='BV1Ys421M7YM',
         aid=1855474163,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1
     )
     actual_durl = actual_dm.data.durl
@@ -524,7 +524,7 @@ async def test_get_ugc_play_support_formats(mock_get_req):
         bvid='BV1X54y1C74U',
         aid=842089940,
         qn=None,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -557,7 +557,7 @@ async def test_get_ugc_play_by_aid(mock_get_req):
         cid=239927346,
         aid=842089940,
         qn=QualityNumber.PPLUS_1080.value,
-        fnval=16,
+        fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
     )
@@ -571,6 +571,6 @@ async def test_get_ugc_play_without_bv_or_av_id():
         await get_ugc_play(
             cid=239927346,
             qn=None,
-            fnval=16,
+            fnval=FormatNumberValue.DASH.value,
             fourk=1
         )
