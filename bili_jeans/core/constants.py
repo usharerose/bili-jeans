@@ -195,3 +195,6 @@ class BitRateId(Enum):
             if item.value.bit_rate_id == bit_rate_id:
                 return item
         raise ValueError(f'Invalid given Bit Rate Id: {bit_rate_id}')
+
+
+CHUNK_SIZE: int = int(1024 * 1024)
