@@ -11,7 +11,7 @@ from tests.utils import get_mock_async_response, MOCK_SESS_DATA
 
 with open('tests/data/ugc_view_BV1X54y1C74U.json', 'r') as fp:
     DATA_VIEW = json.load(fp)
-with open('tests/data/ugc_view_BVNotExisted.json', 'r') as fp:
+with open('tests/data/ugc_view_BV1UnExisted.json', 'r') as fp:
     DATA_VIEW_NOT_EXISTED = json.load(fp)
 with open('tests/data/ugc_view_BV1tN4y1F79k.json', 'r') as fp:
     DATA_VIEW_WITH_SEASON = json.load(fp)
@@ -46,7 +46,7 @@ async def test_get_ugc_view_with_wrong_resources(mock_get_req):
             ensure_ascii=False
         ).encode('utf-8')
     )
-    actual_dm = await get_ugc_view(bvid='BVNotExisted')
+    actual_dm = await get_ugc_view(bvid='BV1UnExisted')
 
     assert actual_dm.code == -400
     assert actual_dm.message == '请求错误'

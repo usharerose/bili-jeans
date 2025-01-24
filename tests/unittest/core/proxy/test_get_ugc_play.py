@@ -11,7 +11,7 @@ from tests.utils import get_mock_async_response, MOCK_SESS_DATA
 
 with open('tests/data/ugc_play_BV1X54y1C74U.json', 'r') as fp:
     DATA_PLAY = json.load(fp)
-with open('tests/data/ugc_play_BVNotExisted.json', 'r') as fp:
+with open('tests/data/ugc_play_BV1UnExisted.json', 'r') as fp:
     DATA_PLAY_NOT_EXISTED = json.load(fp)
 with open('tests/data/ugc_play_BV1Ys421M7YM.json', 'r') as fp:
     DATA_PAID_PLAY = json.load(fp)
@@ -57,7 +57,7 @@ async def test_get_ugc_play_with_wrong_resources(mock_get_req):
     )
     actual_dm = await get_ugc_play(
         cid=239927346,
-        bvid='BVNotExisted',
+        bvid='BV1UnExisted',
         aid=842089940,
         qn=None,
         fnval=FormatNumberValue.DASH.value,
