@@ -556,7 +556,7 @@ async def test_get_ugc_play_by_aid(mock_get_req):
     actual_dm = await get_ugc_play(
         cid=239927346,
         aid=842089940,
-        qn=QualityNumber.PPLUS_1080.value,
+        qn=QualityNumber.PPLUS_1080.quality_id,
         fnval=FormatNumberValue.DASH.value,
         fourk=1,
         sess_data=MOCK_SESS_DATA
