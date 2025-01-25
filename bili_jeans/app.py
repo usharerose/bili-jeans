@@ -23,6 +23,8 @@ async def run(
     dir_path: str,
     qn: Optional[int] = None,
     reverse_qn: bool = False,
+    codec_id: Optional[int] = None,
+    reverse_codec: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     dir_p = Path(dir_path)
@@ -32,7 +34,17 @@ async def run(
     pages = await get_ugc_pages(metadata, sess_data)
 
     tasks = [
-        asyncio.create_task(_download_page(page_data, dir_p, qn, reverse_qn, sess_data))
+        asyncio.create_task(
+            _download_page(
+                page_data,
+                dir_p,
+                qn,
+                reverse_qn,
+                codec_id,
+                reverse_codec,
+                sess_data
+            )
+        )
         for page_data in pages
     ]
     _ = await asyncio.gather(*tasks)
@@ -43,6 +55,8 @@ async def _download_page(
     dir_path: Path,
     qn: Optional[int] = None,
     reverse_qn: bool = False,
+    codec_id: Optional[int] = None,
+    reverse_codec: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     ugc_play = await get_ugc_play(
@@ -59,6 +73,11 @@ async def _download_page(
     avail_qn_set = set([video.id_field for video in videos])
     qn = _filter_avail_quality_id(QualityNumber, avail_qn_set, qn, reverse_qn)
     videos = [video for video in videos if video.id_field == qn]
+    video, *_ = videos
+
+    avail_codec_id_set = set([video.codecid for video in videos])
+    codec_id = _filter_avail_quality_id(CodecId, avail_codec_id_set, codec_id, reverse_codec)
+    videos = [video for video in videos if video.codecid == codec_id]
     video, *_ = videos
 
     file_p = dir_path.joinpath(f'{page_data.cid}.mp4')
