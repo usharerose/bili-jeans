@@ -4,7 +4,7 @@ bili-jeans application
 import asyncio
 from mimetypes import guess_extension
 from pathlib import Path
-from typing import Optional, Set, Type, Union
+from typing import List, Optional, Set, Type, Union
 
 from .core.constants import (
     BitRateId,
@@ -17,6 +17,7 @@ from .core.factory import parse_web_view_url
 from .core.pages import get_ugc_pages
 from .core.proxy import get_ugc_play
 from .core.schemes import PageData
+from .core.schemes.ugc_play import DashMediaItem
 
 
 async def run(
@@ -26,6 +27,8 @@ async def run(
     reverse_qn: bool = False,
     codec_id: Optional[int] = None,
     reverse_codec: bool = False,
+    bit_rate_id: Optional[int] = None,
+    reverse_bit_rate: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     dir_p = Path(dir_path)
@@ -43,6 +46,8 @@ async def run(
                 reverse_qn,
                 codec_id,
                 reverse_codec,
+                bit_rate_id,
+                reverse_bit_rate,
                 sess_data
             )
         )
@@ -58,6 +63,8 @@ async def _download_page(
     reverse_qn: bool = False,
     codec_id: Optional[int] = None,
     reverse_codec: bool = False,
+    bit_rate_id: Optional[int] = None,
+    reverse_bit_rate: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     ugc_play = await get_ugc_play(
@@ -83,7 +90,43 @@ async def _download_page(
     video_file_ext = guess_extension(video.mime_type) or ''
     video_file_p = dir_path.joinpath(f'{page_data.cid}{video_file_ext}')
 
-    await download_resource(url=video.base_url, file=str(video_file_p))
+    audios: List[DashMediaItem] = []
+    if ugc_play.data.dash.audio is not None:
+        audios.extend(ugc_play.data.dash.audio)
+    flac = ugc_play.data.dash.flac
+    if flac is not None and flac.audio is not None:
+        audios.append(flac.audio)
+    dolby = ugc_play.data.dash.dolby
+    if dolby.audio is not None:
+        audios.extend(dolby.audio)
+
+    avail_bit_rate_set = set([audio.id_field for audio in audios])
+    bit_rate_id = _filter_avail_quality_id(
+        BitRateId,
+        avail_bit_rate_set,
+        bit_rate_id,
+        reverse_bit_rate
+    )
+    audios = [audio for audio in audios if audio.id_field == bit_rate_id]
+    audio, *_ = audios
+    audio_file_ext = guess_extension(audio.mime_type) or ''
+    audio_file_p = dir_path.joinpath(f'{page_data.cid}{audio_file_ext}')
+
+    tasks = [
+        asyncio.create_task(
+            download_resource(**kwargs)
+        ) for kwargs in [
+            {
+                'url': video.base_url,
+                'file': str(video_file_p)
+            },
+            {
+                'url': audio.base_url,
+                'file': str(audio_file_p)
+            }
+        ]
+    ]
+    _ = await asyncio.gather(*tasks)
 
 
 def _filter_avail_quality_id(
