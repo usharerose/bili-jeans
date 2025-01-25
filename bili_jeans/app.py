@@ -2,6 +2,7 @@
 bili-jeans application
 """
 import asyncio
+from mimetypes import guess_extension
 from pathlib import Path
 from typing import Optional, Set, Type, Union
 
@@ -79,9 +80,10 @@ async def _download_page(
     codec_id = _filter_avail_quality_id(CodecId, avail_codec_id_set, codec_id, reverse_codec)
     videos = [video for video in videos if video.codecid == codec_id]
     video, *_ = videos
+    video_file_ext = guess_extension(video.mime_type) or ''
+    video_file_p = dir_path.joinpath(f'{page_data.cid}{video_file_ext}')
 
-    file_p = dir_path.joinpath(f'{page_data.cid}.mp4')
-    await download_resource(url=video.base_url, file=str(file_p))
+    await download_resource(url=video.base_url, file=str(video_file_p))
 
 
 def _filter_avail_quality_id(
