@@ -4,13 +4,14 @@ bili-jeans application
 import asyncio
 from mimetypes import guess_extension
 from pathlib import Path
-from typing import List, Optional, Set, Type, Union
+from typing import List, Optional, Set, Type
 
 from .core.constants import (
     BitRateId,
     CodecId,
     FormatNumberValue,
-    QualityNumber
+    QualityNumber,
+    QualityId
 )
 from .core.download import download_resource
 from .core.factory import parse_web_view_url
@@ -76,7 +77,9 @@ async def _download_page(
     )
     if ugc_play.data is None:
         raise
-    videos = ugc_play.data.dash.video
+    dash = ugc_play.data.dash
+    assert dash is not None
+    videos = dash.video
 
     avail_qn_set = set([video.id_field for video in videos])
     qn = _filter_avail_quality_id(QualityNumber, avail_qn_set, qn, reverse_qn)
@@ -91,12 +94,12 @@ async def _download_page(
     video_file_p = dir_path.joinpath(f'{page_data.cid}{video_file_ext}')
 
     audios: List[DashMediaItem] = []
-    if ugc_play.data.dash.audio is not None:
-        audios.extend(ugc_play.data.dash.audio)
-    flac = ugc_play.data.dash.flac
+    if dash.audio is not None:
+        audios.extend(dash.audio)
+    flac = dash.flac
     if flac is not None and flac.audio is not None:
         audios.append(flac.audio)
-    dolby = ugc_play.data.dash.dolby
+    dolby = dash.dolby
     if dolby.audio is not None:
         audios.extend(dolby.audio)
 
@@ -130,11 +133,7 @@ async def _download_page(
 
 
 def _filter_avail_quality_id(
-    quality_class: Union[
-        Type[BitRateId],
-        Type[CodecId],
-        Type[QualityNumber]
-    ],
+    quality_class: Type[QualityId],
     quality_set: Set[int],
     quality_id: Optional[int] = None,
     reverse: bool = False
@@ -151,10 +150,11 @@ def _filter_avail_quality_id(
     if len(quality_set) <= 0:
         raise ValueError('No alternative quality IDs')
 
-    try:
-        _ = quality_class.from_value(quality_id)
-    except ValueError:
-        quality_id = None
+    if quality_id is not None:
+        try:
+            _ = quality_class.from_value(quality_id)
+        except ValueError:
+            quality_id = None
 
     quality_ids = [
         quality_class.from_value(_quality_id)
@@ -171,15 +171,18 @@ def _filter_avail_quality_id(
         return quality_item.quality_id
 
     if quality_id not in quality_set:
-        greater: Optional[quality_class] = None
-        lesser: Optional[quality_class] = None
+        greater: Optional[QualityId] = None
+        lesser: Optional[QualityId] = None
         quality_id_obj = quality_class.from_value(quality_id)
         for item in quality_ids:
             if item > quality_id_obj:
                 greater = item if greater is None or greater > item else greater
             else:
                 lesser = item if lesser is None or lesser < item else lesser
-        quality_id_obj = lesser or greater
+        if lesser is not None:
+            quality_id_obj = lesser
+        elif greater is not None:
+            quality_id_obj = greater
         return quality_id_obj.quality_id
 
     return quality_id

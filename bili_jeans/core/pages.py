@@ -20,6 +20,7 @@ async def get_ugc_pages(
         raise ValueError(ugc_view.message)
 
     pages = []
+    assert ugc_view.data is not None
     for item in ugc_view.data.pages:
         page = PageData(
             aid=ugc_view.data.aid,

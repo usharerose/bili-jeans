@@ -37,16 +37,16 @@ class QualityItem(NamedTuple):
     quality_id: int
     quality_order: int
 
-    def __le__(self, other: 'QualityItem') -> bool:
+    def __le__(self, other: 'QualityItem') -> bool:  # type: ignore[override]
         return self.quality_order <= other.quality_order
 
-    def __lt__(self, other: 'QualityItem') -> bool:
+    def __lt__(self, other: 'QualityItem') -> bool:  # type: ignore[override]
         return self.quality_order < other.quality_order
 
-    def __ge__(self, other: 'QualityItem') -> bool:
+    def __ge__(self, other: 'QualityItem') -> bool:  # type: ignore[override]
         return self.quality_order >= other.quality_order
 
-    def __gt__(self, other: 'QualityItem') -> bool:
+    def __gt__(self, other: 'QualityItem') -> bool:  # type: ignore[override]
         return self.quality_order > other.quality_order
 
 
