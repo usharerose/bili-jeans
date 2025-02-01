@@ -1,0 +1,122 @@
+{
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "bvid": "BV13L4y1K7th",
+    "aid": 854603731,
+    "videos": 1,
+    "tid": 95,
+    "tid_v2": 2105,
+    "tname": "数码",
+    "tname_v2": "科技数码综合",
+    "copyright": 2,
+    "pic": "http://i2.hdslb.com/bfs/archive/13dda3214d1bc41efb9dcab95ee05e89905293bb.jpg",
+    "title": "【杜比视界·全景声】中文演示片｜已更新 需要设备支持 Dolby Atmos 感受身体被360°包围的感觉",
+    "pubdate": 1653908491,
+    "ctime": 1653908491,
+    "desc": "【双杜比开启·极致体验】",
+    "desc_v2": [
+      {
+        "raw_text": "【双杜比开启·极致体验】",
+        "type": 1,
+        "biz_id": 0
+      }
+    ],
+    "state": 0,
+    "duration": 110,
+    "rights": {
+      "bp": 0,
+      "elec": 0,
+      "download": 1,
+      "movie": 0,
+      "pay": 0,
+      "hd5": 0,
+      "no_reprint": 0,
+      "autoplay": 1,
+      "ugc_pay": 0,
+      "is_cooperation": 0,
+      "ugc_pay_preview": 0,
+      "no_background": 0,
+      "clean_mode": 0,
+      "is_stein_gate": 0,
+      "is_360": 0,
+      "no_share": 0,
+      "arc_pay": 0,
+      "free_watch": 0
+    },
+    "owner": {
+      "mid": 384688512,
+      "name": "4K画质杜比视界体验",
+      "face": "https://i0.hdslb.com/bfs/face/5163926864cc8fcc3b1f57fee00d4e5b17f0f532.jpg"
+    },
+    "stat": {
+      "aid": 854603731,
+      "view": 1431705,
+      "danmaku": 2589,
+      "reply": 1266,
+      "favorite": 15890,
+      "coin": 3266,
+      "share": 4873,
+      "now_rank": 0,
+      "his_rank": 0,
+      "like": 18448,
+      "dislike": 0,
+      "evaluation": "",
+      "vt": 0
+    },
+    "argue_info": {
+      "argue_msg": "",
+      "argue_type": 0,
+      "argue_link": ""
+    },
+    "dynamic": "【杜比视界·全景声】中文演示片｜已更新 需要设备支持 Dolby Atmos 感受身体被360°包围的感觉",
+    "cid": 733892245,
+    "dimension": {
+      "width": 3840,
+      "height": 2160,
+      "rotate": 0
+    },
+    "premiere": null,
+    "teenage_mode": 0,
+    "is_chargeable_season": false,
+    "is_story": false,
+    "is_upower_exclusive": false,
+    "is_upower_play": false,
+    "is_upower_preview": false,
+    "enable_vt": 0,
+    "vt_display": "",
+    "no_cache": false,
+    "pages": [
+      {
+        "cid": 733892245,
+        "page": 1,
+        "from": "vupload",
+        "part": "【杜比视界·全景声】中文演示片｜已更新 需要设备支持 Dolby Atmos 感受身体被360°包围的感觉",
+        "duration": 110,
+        "vid": "",
+        "weblink": "",
+        "dimension": {
+          "width": 3840,
+          "height": 2160,
+          "rotate": 0
+        },
+        "first_frame": "http://i1.hdslb.com/bfs/storyff/n220530a2p7hr2lg6cqyu1777j76xhi3_firsti.jpg"
+      }
+    ],
+    "subtitle": {
+      "allow_submit": true,
+      "list": []
+    },
+    "is_season_display": false,
+    "user_garb": {
+      "url_image_ani_cut": ""
+    },
+    "honor_reply": {},
+    "like_icon": "",
+    "need_jump_bv": false,
+    "disable_show_up_info": false,
+    "is_story_play": 1,
+    "is_view_self": false
+  }
+}
