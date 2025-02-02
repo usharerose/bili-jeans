@@ -31,7 +31,7 @@ def test_quality_number_from_value():
 def test_quality_number_from_invalid_value():
     with pytest.raises(
         ValueError,
-        match='Invalid given quality number : 0'
+        match='Invalid given QualityNumber: 0'
     ):
         QualityNumber.from_value(0)
 
@@ -42,21 +42,21 @@ def test_format_number_value_get_dash_full_fnval():
 
 def test_format_number_value_get_dash_fnval_for_hdr():
     assert FormatNumberValue.get_dash_fnval(
-        QualityNumber.HDR.value,
+        QualityNumber.HDR.quality_id,
         False
     ) == 208  # 000011010000
 
 
 def test_format_number_value_get_dash_fnval_for_dolby_vision_and_audio():
     assert FormatNumberValue.get_dash_fnval(
-        QualityNumber.DOLBY.value,
+        QualityNumber.DOLBY.quality_id,
         True
     ) == 912  # 001110010000
 
 
 def test_format_number_value_get_dash_fnval_for_eight_k():
     assert FormatNumberValue.get_dash_fnval(
-        QualityNumber.EIGHT_K.value,
+        QualityNumber.EIGHT_K.quality_id,
         False
     ) == 1168  # 010010010000
 
@@ -66,7 +66,7 @@ def test_codec_id_from_value():
 
 
 def test_codec_id_from_invalid_value():
-    with pytest.raises(ValueError, match='Invalid given codec Id: 0'):
+    with pytest.raises(ValueError, match='Invalid given CodecId: 0'):
         CodecId.from_value(0)
 
 
@@ -77,6 +77,6 @@ def test_bit_rate_id_from_value():
 def test_bit_rate_id_from_invalid_value():
     with pytest.raises(
         ValueError,
-        match='Invalid given Bit Rate Id: 0'
+        match='Invalid given BitRateId: 0'
     ):
         BitRateId.from_value(0)

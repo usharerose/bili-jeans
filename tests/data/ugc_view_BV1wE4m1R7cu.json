@@ -1,0 +1,169 @@
+{
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "bvid": "BV1wE4m1R7cu",
+    "aid": 1256708328,
+    "videos": 2,
+    "tid": 17,
+    "tid_v2": 2002,
+    "tname": "单机游戏",
+    "tname_v2": "影视剪辑",
+    "copyright": 1,
+    "pic": "http://i1.hdslb.com/bfs/archive/3353cda40ec2cee97dfdc628533ee066474534f6.jpg",
+    "title": "把《黑神话：悟空》剪成电影！无UI超宽画幅【4K60】！",
+    "pubdate": 1725260400,
+    "ctime": 1725140799,
+    "desc": "把《黑神话：悟空》剪成电影！4K超宽画幅无UI\\n视频制作：@北忆Bey   \\n赞助：BA",
+    "desc_v2": [
+      {
+        "raw_text": "把《黑神话：悟空》剪成电影！4K超宽画幅无UI\\n视频制作：",
+        "type": 1,
+        "biz_id": 0
+      },
+      {
+        "raw_text": "北忆Bey",
+        "type": 2,
+        "biz_id": 13848015
+      },
+      {
+        "raw_text": "  \\n赞助：BA",
+        "type": 1,
+        "biz_id": 0
+      }
+    ],
+    "state": 0,
+    "duration": 14152,
+    "mission_id": 4019193,
+    "rights": {
+      "bp": 0,
+      "elec": 0,
+      "download": 1,
+      "movie": 0,
+      "pay": 0,
+      "hd5": 0,
+      "no_reprint": 1,
+      "autoplay": 1,
+      "ugc_pay": 0,
+      "is_cooperation": 0,
+      "ugc_pay_preview": 0,
+      "no_background": 0,
+      "clean_mode": 0,
+      "is_stein_gate": 0,
+      "is_360": 0,
+      "no_share": 0,
+      "arc_pay": 0,
+      "free_watch": 0
+    },
+    "owner": {
+      "mid": 49960899,
+      "name": "BuriedAlien",
+      "face": "https://i0.hdslb.com/bfs/face/e41d2f3901e156f708be59a3b4f593779a9adda1.jpg"
+    },
+    "stat": {
+      "aid": 1256708328,
+      "view": 2761635,
+      "danmaku": 16370,
+      "reply": 1931,
+      "favorite": 158111,
+      "coin": 90320,
+      "share": 25403,
+      "now_rank": 0,
+      "his_rank": 27,
+      "like": 128542,
+      "dislike": 0,
+      "evaluation": "",
+      "vt": 0
+    },
+    "argue_info": {
+      "argue_msg": "",
+      "argue_type": 0,
+      "argue_link": ""
+    },
+    "dynamic": "各位爹！把黑神话剪成电影！不过这次热度只能蹭一碗汤了！但这个月不出意外还是要做一期“黑神话美学”的，已经开始做了！等我一下！这期也求一个一键三连！跪求了！",
+    "cid": 25678317262,
+    "dimension": {
+      "width": 3780,
+      "height": 1620,
+      "rotate": 0
+    },
+    "premiere": null,
+    "teenage_mode": 0,
+    "is_chargeable_season": false,
+    "is_story": false,
+    "is_upower_exclusive": false,
+    "is_upower_play": false,
+    "is_upower_preview": false,
+    "enable_vt": 0,
+    "vt_display": "",
+    "no_cache": false,
+    "pages": [
+      {
+        "cid": 25678317262,
+        "page": 1,
+        "from": "vupload",
+        "part": "上集",
+        "duration": 6291,
+        "vid": "",
+        "weblink": "",
+        "dimension": {
+          "width": 3780,
+          "height": 1620,
+          "rotate": 0
+        },
+        "first_frame": "http://i0.hdslb.com/bfs/storyff/n240831ado75mkc0jeq031mp0wx1hg5g_firsti.jpg"
+      },
+      {
+        "cid": 25681134366,
+        "page": 2,
+        "from": "vupload",
+        "part": "下集",
+        "duration": 7861,
+        "vid": "",
+        "weblink": "",
+        "dimension": {
+          "width": 3780,
+          "height": 1620,
+          "rotate": 0
+        },
+        "first_frame": "http://i0.hdslb.com/bfs/storyff/n240901adfcn7bhggfzk7772x31aw8ve_firsti.jpg"
+      }
+    ],
+    "subtitle": {
+      "allow_submit": true,
+      "list": []
+    },
+    "is_season_display": false,
+    "user_garb": {
+      "url_image_ani_cut": ""
+    },
+    "honor_reply": {
+      "honor": [
+        {
+          "aid": 1256708328,
+          "type": 3,
+          "desc": "全站排行榜最高第27名",
+          "weekly_recommend_num": 0
+        },
+        {
+          "aid": 1256708328,
+          "type": 4,
+          "desc": "热门",
+          "weekly_recommend_num": 0
+        },
+        {
+          "aid": 1256708328,
+          "type": 7,
+          "desc": "热门收录",
+          "weekly_recommend_num": 0
+        }
+      ]
+    },
+    "like_icon": "",
+    "need_jump_bv": false,
+    "disable_show_up_info": false,
+    "is_story_play": 0,
+    "is_view_self": false
+  }
+}

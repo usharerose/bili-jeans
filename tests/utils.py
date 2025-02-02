@@ -1,7 +1,7 @@
 """
 Utilities for unit test and functional test
 """
-from typing import cast, Optional
+from typing import cast, List, Optional
 
 from aiohttp.client import _RequestContextManager
 from multidict import CIMultiDictProxy
@@ -31,6 +31,26 @@ class MockAsyncResponse(object):
     @property
     def headers(self) -> Optional[CIMultiDictProxy]:
         return self._headers
+
+
+class MockAsyncIterator:
+
+    def __init__(self, chunk_size: int):
+        self._data: List[bytes] = [
+            b'dummy content'
+        ]
+        self._index: int = 0
+        self._chunk_size = chunk_size
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        if self._index >= len(self._data):
+            raise StopAsyncIteration
+        result = self._data[self._index]
+        self._index += 1
+        return result
 
 
 def get_mock_async_response(

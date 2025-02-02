@@ -8,9 +8,9 @@ from urllib.parse import urlparse
 
 import aiohttp
 from aiohttp import ClientResponse
-from pydantic import BaseModel
 
 from .constants import HEADERS, TIMEOUT
+from .schemes import WebViewMetaData
 
 
 logger = logging.getLogger(__name__)
@@ -25,12 +25,6 @@ WEB_VIEW_URL_ID_TYPE_MAPPING = {
     WEB_VIEW_URL_UGC_BVID_PATTERN: ('bvid', str),
     WEB_VIEW_URL_UGC_AVID_PATTERN: ('aid', int)
 }
-
-
-class WebViewMetaData(BaseModel):
-
-    aid: Optional[int] = None
-    bvid: Optional[str] = None
 
 
 async def parse_web_view_url(url: str) -> WebViewMetaData:
