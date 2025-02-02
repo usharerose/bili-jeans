@@ -4,12 +4,13 @@ bili-jeans application
 import asyncio
 from mimetypes import guess_extension
 from pathlib import Path
-from typing import List, Optional, Set, Type
+from typing import List, Optional, Set, Type, Tuple
 
 from .core.constants import (
     BitRateId,
     CodecId,
     FormatNumberValue,
+    MIME_TYPE_VIDEO_MP4,
     QualityNumber,
     QualityId
 )
@@ -17,8 +18,8 @@ from .core.download import download_resource
 from .core.factory import parse_web_view_url
 from .core.pages import get_ugc_pages
 from .core.proxy import get_ugc_play
-from .core.schemes import PageData
-from .core.schemes.ugc_play import DashMediaItem
+from .core.schemes import MediaResource, PageData
+from .core.schemes.ugc_play import DashMediaItem, GetUGCPlayDataDash, GetUGCPlayDataDUrlItem
 
 
 async def run(
@@ -77,8 +78,55 @@ async def _download_page(
     )
     if ugc_play.data is None:
         raise
+
     dash = ugc_play.data.dash
+    durl = ugc_play.data.durl
+    video: Optional[MediaResource] = None
+    audio: Optional[MediaResource] = None
+    if dash is not None:
+        video, audio = _get_source_urls_from_dash(
+            dash,
+            qn,
+            reverse_qn,
+            codec_id,
+            reverse_codec,
+            bit_rate_id,
+            reverse_bit_rate
+        )
+    else:
+        video = _get_source_urls_from_durl(durl)
+
+    task_kwargs = []
+    for item in (video, audio):
+        if item is None:
+            continue
+        file_ext = guess_extension(item.mime_type) or ''
+        file_p = dir_path.joinpath(f'{page_data.cid}{file_ext}')
+        kwarg_item = {
+            'url': item.url,
+            'file': str(file_p)
+        }
+        task_kwargs.append(kwarg_item)
+
+    tasks = [
+        asyncio.create_task(
+            download_resource(**kwargs)
+        ) for kwargs in task_kwargs
+    ]
+    _ = await asyncio.gather(*tasks)
+
+
+def _get_source_urls_from_dash(
+    dash: Optional[GetUGCPlayDataDash] = None,
+    qn: Optional[int] = None,
+    reverse_qn: bool = False,
+    codec_id: Optional[int] = None,
+    reverse_codec: bool = False,
+    bit_rate_id: Optional[int] = None,
+    reverse_bit_rate: bool = False,
+) -> Tuple[MediaResource, MediaResource]:
     assert dash is not None
+
     videos = dash.video
 
     avail_qn_set = set([video.id_field for video in videos])
@@ -90,8 +138,10 @@ async def _download_page(
     codec_id = _filter_avail_quality_id(CodecId, avail_codec_id_set, codec_id, reverse_codec)
     videos = [video for video in videos if video.codecid == codec_id]
     video, *_ = videos
-    video_file_ext = guess_extension(video.mime_type) or ''
-    video_file_p = dir_path.joinpath(f'{page_data.cid}{video_file_ext}')
+    video_resource = MediaResource(
+        url=video.base_url,
+        mime_type=video.mime_type
+    )
 
     audios: List[DashMediaItem] = []
     if dash.audio is not None:
@@ -112,24 +162,29 @@ async def _download_page(
     )
     audios = [audio for audio in audios if audio.id_field == bit_rate_id]
     audio, *_ = audios
-    audio_file_ext = guess_extension(audio.mime_type) or ''
-    audio_file_p = dir_path.joinpath(f'{page_data.cid}{audio_file_ext}')
+    audio_resource = MediaResource(
+        url=audio.base_url,
+        mime_type=audio.mime_type
+    )
 
-    tasks = [
-        asyncio.create_task(
-            download_resource(**kwargs)
-        ) for kwargs in [
-            {
-                'url': video.base_url,
-                'file': str(video_file_p)
-            },
-            {
-                'url': audio.base_url,
-                'file': str(audio_file_p)
-            }
-        ]
-    ]
-    _ = await asyncio.gather(*tasks)
+    return video_resource, audio_resource
+
+
+def _get_source_urls_from_durl(
+    durl: Optional[List[GetUGCPlayDataDUrlItem]] = None
+) -> MediaResource:
+    """
+    When the resource is unpurchased but can be previewed,
+    would return it via durl
+    """
+    assert durl is not None
+
+    video, *_ = durl
+    video_resource = MediaResource(
+        url=video.url,
+        mime_type=MIME_TYPE_VIDEO_MP4
+    )
+    return video_resource
 
 
 def _filter_avail_quality_id(
