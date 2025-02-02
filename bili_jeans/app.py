@@ -5,14 +5,17 @@ import asyncio
 from mimetypes import guess_extension
 from pathlib import Path
 from typing import List, Optional, Set, Type, Tuple
+from urllib.parse import urlencode, urlparse
 
 from .core.constants import (
     BitRateId,
     CodecId,
     FormatNumberValue,
     MIME_TYPE_VIDEO_MP4,
+    MIME_TYPE_XML,
     QualityNumber,
-    QualityId
+    QualityId,
+    URL_WEB_DANMAKU
 )
 from .core.download import download_resource
 from .core.factory import parse_web_view_url
@@ -31,6 +34,7 @@ async def run(
     reverse_codec: bool = False,
     bit_rate_id: Optional[int] = None,
     reverse_bit_rate: bool = False,
+    enable_danmaku: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     dir_p = Path(dir_path)
@@ -50,6 +54,7 @@ async def run(
                 reverse_codec,
                 bit_rate_id,
                 reverse_bit_rate,
+                enable_danmaku,
                 sess_data
             )
         )
@@ -67,6 +72,7 @@ async def _download_page(
     reverse_codec: bool = False,
     bit_rate_id: Optional[int] = None,
     reverse_bit_rate: bool = False,
+    enable_danmaku: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     ugc_play = await get_ugc_play(
@@ -96,8 +102,15 @@ async def _download_page(
     else:
         video = _get_source_urls_from_durl(durl)
 
+    danmaku = MediaResource(
+        url=urlparse(URL_WEB_DANMAKU)._replace(
+            query=urlencode({'oid': page_data.cid})
+        ).geturl(),
+        mime_type=MIME_TYPE_XML
+    ) if enable_danmaku else None
+
     task_kwargs = []
-    for item in (video, audio):
+    for item in (video, audio, danmaku):
         if item is None:
             continue
         file_ext = guess_extension(item.mime_type) or ''
