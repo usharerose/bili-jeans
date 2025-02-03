@@ -11,6 +11,7 @@ from .core.constants import (
     BitRateId,
     CodecId,
     FormatNumberValue,
+    MIME_TYPE_JPEG,
     MIME_TYPE_VIDEO_MP4,
     MIME_TYPE_XML,
     QualityNumber,
@@ -35,6 +36,7 @@ async def run(
     bit_rate_id: Optional[int] = None,
     reverse_bit_rate: bool = False,
     enable_danmaku: bool = False,
+    enable_cover: bool = True,
     sess_data: Optional[str] = None
 ) -> None:
     dir_p = Path(dir_path)
@@ -55,6 +57,7 @@ async def run(
                 bit_rate_id,
                 reverse_bit_rate,
                 enable_danmaku,
+                enable_cover,
                 sess_data
             )
         )
@@ -73,6 +76,7 @@ async def _download_page(
     bit_rate_id: Optional[int] = None,
     reverse_bit_rate: bool = False,
     enable_danmaku: bool = False,
+    enable_cover: bool = True,
     sess_data: Optional[str] = None
 ) -> None:
     ugc_play = await get_ugc_play(
@@ -109,8 +113,13 @@ async def _download_page(
         mime_type=MIME_TYPE_XML
     ) if enable_danmaku else None
 
+    cover = MediaResource(
+        url=page_data.cover,
+        mime_type=MIME_TYPE_JPEG
+    ) if enable_cover else None
+
     task_kwargs = []
-    for item in (video, audio, danmaku):
+    for item in (video, audio, danmaku, cover):
         if item is None:
             continue
         file_ext = guess_extension(item.mime_type) or ''

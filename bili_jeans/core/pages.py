@@ -27,6 +27,7 @@ async def get_ugc_pages(
             bvid=ugc_view.data.bvid,
             cid=item.cid,
             title=item.part,
+            cover=ugc_view.data.pic,
             duration=item.duration
         )
         pages.append(page)

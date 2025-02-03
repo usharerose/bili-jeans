@@ -202,5 +202,6 @@ class BitRateId(QualityId):
 CHUNK_SIZE: int = int(1024 * 1024)
 
 
+MIME_TYPE_JPEG = 'image/jpeg'
 MIME_TYPE_VIDEO_MP4 = 'video/mp4'
 MIME_TYPE_XML = 'text/xml'
