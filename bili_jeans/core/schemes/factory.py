@@ -20,4 +20,5 @@ class PageData(BaseModel):
     bvid: Optional[str] = None
     cid: int
     title: str
+    cover: str
     duration: Optional[int]     # unit is second

@@ -51,8 +51,8 @@ async def test_run(
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video and audio separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
+    # download video, audio and cover separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
 @patch('aiofile.async_open')
@@ -81,8 +81,8 @@ async def test_run_with_flac(
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video and audio separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
+    # download video, audio and cover separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
 @patch('aiofile.async_open')
@@ -111,8 +111,8 @@ async def test_run_with_dolby(
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video and audio separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
+    # download video, audio and cover separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
 @patch('aiofile.async_open')
@@ -145,8 +145,8 @@ async def test_run_with_declared_quality(
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video and audio separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
+    # download video, audio and cover separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
 @patch('aiofile.async_open')
@@ -181,7 +181,7 @@ async def test_run_for_paid_ugc_without_privilege(
 
     # the resource for preview is in durl instead of dash
     # which has video and audio separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 1
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
 
 
 @patch('aiofile.async_open')
@@ -211,5 +211,36 @@ async def test_run_enable_danmaku(
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video and audio separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
+    # download video, audio, cover and danmaku separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 4
+
+
+@patch('aiofile.async_open')
+@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
+@patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
+@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+async def test_run_disable_cover(
+    mock_parse_web_view_url,
+    mock_get_ugc_view_resp_req,
+    mock_get_ugc_play_resp_req,
+    mock_get_resource_req,
+    mock_async_open
+):
+    mock_parse_web_view_url.return_value = WebViewMetaData(
+        bvid='BV1X54y1C74U'
+    )
+    mock_get_ugc_view_resp_req.return_value = DATA_VIEW
+    mock_get_ugc_play_resp_req.return_value = DATA_PLAY
+    mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
+
+    await run(
+        url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
+        dir_path='/tmp',
+        enable_cover=False,
+        sess_data=MOCK_SESS_DATA
+    )
+
+    # download video and audio separately without cover
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
