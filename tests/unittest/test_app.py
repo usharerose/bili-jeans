@@ -7,35 +7,35 @@ from tests.utils import MockAsyncIterator, MOCK_SESS_DATA
 
 
 HTML_CONTENT = b'<!DOCTYPE html><html lang="zh-Hans"></html>'
-with open('tests/data/ugc_view_BV1X54y1C74U.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV1X54y1C74U.json', 'r') as fp:
     DATA_VIEW = json.load(fp)
-with open('tests/data/ugc_play_BV1X54y1C74U.json', 'r') as fp:
+with open('tests/data/ugc_play/ugc_play_BV1X54y1C74U.json', 'r') as fp:
     DATA_PLAY = json.load(fp)
-with open('tests/data/ugc_player_BV1X54y1C74U.json', 'r') as fp:
+with open('tests/data/ugc_player/ugc_player_BV1X54y1C74U.json', 'r') as fp:
     DATA_PLAYER = json.load(fp)
-with open('tests/data/ugc_view_BV13ht2ejE1S.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV13ht2ejE1S.json', 'r') as fp:
     DATA_VIEW_WITH_FLAC = json.load(fp)
-with open('tests/data/ugc_play_BV13ht2ejE1S.json', 'r') as fp:
+with open('tests/data/ugc_play/ugc_play_BV13ht2ejE1S.json', 'r') as fp:
     DATA_PLAY_WITH_FLAC = json.load(fp)
-with open('tests/data/ugc_player_BV13ht2ejE1S.json', 'r') as fp:
+with open('tests/data/ugc_player/ugc_player_BV13ht2ejE1S.json', 'r') as fp:
     DATA_PLAYER_WITH_FLAC = json.load(fp)
-with open('tests/data/ugc_view_BV13L4y1K7th.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV13L4y1K7th.json', 'r') as fp:
     DATA_VIEW_WITH_DOLBY = json.load(fp)
-with open('tests/data/ugc_play_BV13L4y1K7th.json', 'r') as fp:
+with open('tests/data/ugc_play/ugc_play_BV13L4y1K7th.json', 'r') as fp:
     DATA_PLAY_WITH_DOLBY = json.load(fp)
-with open('tests/data/ugc_player_BV13L4y1K7th.json', 'r') as fp:
+with open('tests/data/ugc_player/ugc_player_BV13L4y1K7th.json', 'r') as fp:
     DATA_PLAYER_WITH_DOLBY = json.load(fp)
-with open('tests/data/ugc_view_BV1Ys421M7YM.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV1Ys421M7YM.json', 'r') as fp:
     DATA_VIEW_UNPURCHASED = json.load(fp)
-with open('tests/data/ugc_play_BV1Ys421M7YM.json', 'r') as fp:
+with open('tests/data/ugc_play/ugc_play_BV1Ys421M7YM.json', 'r') as fp:
     DATA_PLAY_UNPURCHASED = json.load(fp)
-with open('tests/data/ugc_player_BV1Ys421M7YM.json', 'r') as fp:
+with open('tests/data/ugc_player/ugc_player_BV1Ys421M7YM.json', 'r') as fp:
     DATA_PLAYER_UNPURCHASED = json.load(fp)
-with open('tests/data/ugc_view_BV1Et4y1r7Eu.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV1Et4y1r7Eu.json', 'r') as fp:
     DATA_VIEW_WITH_SUBTITLE = json.load(fp)
-with open('tests/data/ugc_play_BV1Et4y1r7Eu.json', 'r') as fp:
+with open('tests/data/ugc_play/ugc_play_BV1Et4y1r7Eu.json', 'r') as fp:
     DATA_PLAY_WITH_SUBTITLE = json.load(fp)
-with open('tests/data/ugc_player_BV1Et4y1r7Eu.json', 'r') as fp:
+with open('tests/data/ugc_player/ugc_player_BV1Et4y1r7Eu.json', 'r') as fp:
     DATA_PLAYER_WITH_SUBTITLE = json.load(fp)
 
 

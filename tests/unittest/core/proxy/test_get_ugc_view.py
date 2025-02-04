@@ -9,11 +9,11 @@ from bili_jeans.core.proxy import get_ugc_view
 from tests.utils import get_mock_async_response, MOCK_SESS_DATA
 
 
-with open('tests/data/ugc_view_BV1X54y1C74U.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV1X54y1C74U.json', 'r') as fp:
     DATA_VIEW = json.load(fp)
-with open('tests/data/ugc_view_BV1UnExisted.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV1UnExisted.json', 'r') as fp:
     DATA_VIEW_NOT_EXISTED = json.load(fp)
-with open('tests/data/ugc_view_BV1tN4y1F79k.json', 'r') as fp:
+with open('tests/data/ugc_view/ugc_view_BV1tN4y1F79k.json', 'r') as fp:
     DATA_VIEW_WITH_SEASON = json.load(fp)
 
 
