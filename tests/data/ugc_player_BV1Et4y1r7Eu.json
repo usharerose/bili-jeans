@@ -1,0 +1,162 @@
+{
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "aid": 628516398,
+    "bvid": "BV1Et4y1r7Eu",
+    "allow_bp": false,
+    "no_share": false,
+    "cid": 278154209,
+    "max_limit": 3000,
+    "page_no": 1,
+    "has_next": false,
+    "ip_info": {
+      "ip": "2408:8207:3c15:5c90:1961:8ea7:717:b874",
+      "zone_ip": " 172.28.28.43",
+      "zone_id": 4243456,
+      "country": "中国",
+      "province": "北京",
+      "city": ""
+    },
+    "login_mid": 12363921,
+    "login_mid_hash": "cabcddcf",
+    "is_owner": false,
+    "name": "干锅娃娃菜",
+    "permission": "10000,1001",
+    "level_info": {
+      "current_level": 5,
+      "current_min": 10800,
+      "current_exp": 21046,
+      "next_exp": 28800,
+      "level_up": 1663628748
+    },
+    "vip": {
+      "type": 2,
+      "status": 1,
+      "due_date": 1776528000000,
+      "vip_pay_type": 0,
+      "theme_type": 0,
+      "label": {
+        "path": "",
+        "text": "年度大会员",
+        "label_theme": "annual_vip",
+        "text_color": "#FFFFFF",
+        "bg_style": 1,
+        "bg_color": "#FB7299",
+        "border_color": "",
+        "use_img_label": true,
+        "img_label_uri_hans": "",
+        "img_label_uri_hant": "",
+        "img_label_uri_hans_static": "https://i0.hdslb.com/bfs/bangumi/kt/c1c8e8098f128d53c24527aa676b37dc2fb97059.png",
+        "img_label_uri_hant_static": "https://i0.hdslb.com/bfs/activity-plat/static/20220614/e369244d0b14644f5e1a06431e22a4d5/uckjAv3Npy.png"
+      },
+      "avatar_subscript": 1,
+      "nickname_color": "#FB7299",
+      "role": 3,
+      "avatar_subscript_url": "",
+      "tv_vip_status": 1,
+      "tv_vip_pay_type": 0,
+      "tv_due_date": 1744732800,
+      "avatar_icon": {
+        "icon_type": 3,
+        "icon_resource": {
+          "type": 1,
+          "url": "https://i0.hdslb.com/bfs/bangumi/kt/aba51485c0d02940c89aeefcf6680510d9858472.png"
+        }
+      }
+    },
+    "answer_status": 0,
+    "block_time": 0,
+    "role": "0",
+    "last_play_time": 3000,
+    "last_play_cid": 278154209,
+    "now_time": 1738646346,
+    "online_count": 1,
+    "dm_mask": {
+      "cid": 278154209,
+      "plat": 0,
+      "fps": 30,
+      "time": 0,
+      "mask_url": "//upos-sz-staticcos-cmask.bilivideo.com/cmaskboss/278154209_30_2.webmask?trid=23d857722228443c8dbaea2c8a6c2097B&orderid=0,1&logo=00000000"
+    },
+    "need_login_subtitle": false,
+    "subtitle": {
+      "allow_submit": false,
+      "lan": "",
+      "lan_doc": "",
+      "subtitles": [
+        {
+          "id": 37633615760719877,
+          "lan": "zh-CN",
+          "lan_doc": "中文（中国）",
+          "is_lock": false,
+          "subtitle_url": "//aisubtitle.hdslb.com/bfs/subtitle/65f8c14e646399df8623d080a0cd8a156410faef.json?auth_key=1738646346-c9665aa3c1f24b818dd4d8c1d346da71-0-07b06cfe11dcdc29ba8bd985dda7b117",
+          "subtitle_url_v2": "//subtitle.bilibili.com/S%13%1BP.%1D%28%29X%2CR%5Ej%1F%25w%0E%02H%5EHO4%14%7B4%08K@%3C%7B%00M%0B%0A%1AM%1A%19%0BI%2A2%14%3C%7DXNHA%1FDb%1Cy%10C%5B%1FJ%0D%0DH%5E%0D%7DJYTvNP%01%0DT%08S%5CZ%5D%0Cs%20%19%3C4@%11%5D%16%12?auth_key=1738646346-c9665aa3c1f24b818dd4d8c1d346da71-0-07b06cfe11dcdc29ba8bd985dda7b117",
+          "type": 0,
+          "id_str": "37633615760719877",
+          "ai_type": 0,
+          "ai_status": 0
+        },
+        {
+          "id": 1062373651225267712,
+          "lan": "ai-zh",
+          "lan_doc": "中文（自动生成）",
+          "is_lock": false,
+          "subtitle_url": "//aisubtitle.hdslb.com/bfs/ai_subtitle/prod/62851639827815420902e73973c57d94098c1eaca7bbed34f2?auth_key=1738646346-04e6a46be3da40b7bb37f466f96047e6-0-94200e63852582eeed444daee7793037",
+          "subtitle_url_v2": "//subtitle.bilibili.com/S%13%1BP.%1D%28%29X%2CR%5Ej%1F%25w%0E%02H%5EHO4%14%7B4%08K@%3C%7B%00M%0B%0A%1AM%08%056N6$%0C0&%02%1E%01%09%0E%1A2Vy%16M%5D%17EZRHZ%08v%1F%5CXt%1FYR%5B%09%5EQP%5BZ%5Evq%1C%60f%5EB%16%1AM%107%1A.%13%17%0AC%17Z_%16Z?auth_key=1738646346-04e6a46be3da40b7bb37f466f96047e6-0-94200e63852582eeed444daee7793037",
+          "type": 1,
+          "id_str": "1062373651225267712",
+          "ai_type": 0,
+          "ai_status": 2
+        }
+      ]
+    },
+    "view_points": [],
+    "preview_toast": "为创作付费，购买观看完整视频|购买观看",
+    "options": {
+      "is_360": false,
+      "without_vip": false
+    },
+    "guide_attention": [
+      {
+        "type": 1,
+        "from": 26,
+        "to": 31,
+        "pos_x": 338.7632508833923,
+        "pos_y": 264.8480565371025
+      }
+    ],
+    "jump_card": [],
+    "operation_card": [],
+    "online_switch": {
+      "enable_gray_dash_playback": "500",
+      "new_broadcast": "1",
+      "realtime_dm": "1",
+      "subtitle_submit_switch": "1"
+    },
+    "fawkes": {
+      "config_version": 32404,
+      "ff_version": 21289
+    },
+    "show_switch": {
+      "long_progress": false
+    },
+    "bgm_info": null,
+    "toast_block": false,
+    "is_upower_exclusive": false,
+    "is_upower_play": false,
+    "is_ugc_pay_preview": false,
+    "elec_high_level": {
+      "privilege_type": 0,
+      "title": "",
+      "sub_title": "",
+      "show_button": false,
+      "button_text": "",
+      "jump_url": "",
+      "intro": "",
+      "new": false
+    },
+    "disable_show_up_info": false
+  }
+}

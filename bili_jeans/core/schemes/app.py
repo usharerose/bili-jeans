@@ -8,3 +8,4 @@ class MediaResource(BaseModel):
 
     url: str
     mime_type: str
+    filename: str
