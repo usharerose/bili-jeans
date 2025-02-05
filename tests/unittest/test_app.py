@@ -39,8 +39,9 @@ with open('tests/data/ugc_player/ugc_player_BV1Et4y1r7Eu.json', 'r') as fp:
     DATA_PLAYER_WITH_SUBTITLE = json.load(fp)
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -51,6 +52,7 @@ async def test_run(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -60,6 +62,7 @@ async def test_run(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
@@ -72,8 +75,9 @@ async def test_run(
     assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -84,6 +88,7 @@ async def test_run_with_flac(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -93,6 +98,7 @@ async def test_run_with_flac(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY_WITH_FLAC
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER_WITH_FLAC
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
@@ -105,8 +111,9 @@ async def test_run_with_flac(
     assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -117,6 +124,7 @@ async def test_run_with_dolby(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -126,6 +134,7 @@ async def test_run_with_dolby(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY_WITH_DOLBY
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER_WITH_DOLBY
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
@@ -138,8 +147,9 @@ async def test_run_with_dolby(
     assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -150,6 +160,7 @@ async def test_run_with_declared_quality(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -159,6 +170,7 @@ async def test_run_with_declared_quality(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
@@ -175,8 +187,9 @@ async def test_run_with_declared_quality(
     assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -187,6 +200,7 @@ async def test_run_for_paid_ugc_without_privilege(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -196,6 +210,7 @@ async def test_run_for_paid_ugc_without_privilege(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY_UNPURCHASED
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER_UNPURCHASED
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
@@ -213,8 +228,9 @@ async def test_run_for_paid_ugc_without_privilege(
     assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -225,6 +241,7 @@ async def test_run_enable_danmaku(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -234,6 +251,7 @@ async def test_run_enable_danmaku(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
@@ -247,8 +265,9 @@ async def test_run_enable_danmaku(
     assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 4
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -259,6 +278,7 @@ async def test_run_disable_cover(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -268,6 +288,7 @@ async def test_run_disable_cover(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
@@ -281,8 +302,9 @@ async def test_run_disable_cover(
     assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
 
 
-@patch('aiofile.async_open')
-@patch('bili_jeans.core.download.aiohttp.ClientSession.get')
+@patch('bili_jeans.core.download.download_task.aiofile.async_open')
+@patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
@@ -293,6 +315,7 @@ async def test_run_with_subtitle(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_file_p,
     mock_async_open
 ):
     mock_parse_web_view_url.return_value = WebViewMetaData(
@@ -302,6 +325,7 @@ async def test_run_with_subtitle(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY_WITH_SUBTITLE
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER_WITH_SUBTITLE
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
     await run(
