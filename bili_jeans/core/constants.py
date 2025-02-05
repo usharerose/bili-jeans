@@ -29,6 +29,7 @@ TIMEOUT = 5
 # Bilibili API #
 ################
 URL_WEB_UGC_PLAY = 'https://api.bilibili.com/x/player/wbi/playurl'
+URL_WEB_UGC_PLAYER = 'https://api.bilibili.com/x/player/wbi/v2'
 URL_WEB_UGC_VIEW = 'https://api.bilibili.com/x/web-interface/view'
 URL_WEB_DANMAKU = 'https://api.bilibili.com/x/v1/dm/list.so'
 
@@ -203,5 +204,6 @@ CHUNK_SIZE: int = int(1024 * 1024)
 
 
 MIME_TYPE_JPEG = 'image/jpeg'
+MIME_TYPE_JSON = 'application/json'
 MIME_TYPE_VIDEO_MP4 = 'video/mp4'
 MIME_TYPE_XML = 'text/xml'

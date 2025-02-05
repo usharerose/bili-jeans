@@ -2,9 +2,10 @@
 bili-jeans application
 """
 import asyncio
+import logging
 from mimetypes import guess_extension
 from pathlib import Path
-from typing import List, Optional, Set, Type, Tuple
+from typing import cast, List, Optional, Set, Type, Tuple
 from urllib.parse import urlencode, urlparse
 
 from .core.constants import (
@@ -12,6 +13,7 @@ from .core.constants import (
     CodecId,
     FormatNumberValue,
     MIME_TYPE_JPEG,
+    MIME_TYPE_JSON,
     MIME_TYPE_VIDEO_MP4,
     MIME_TYPE_XML,
     QualityNumber,
@@ -21,9 +23,12 @@ from .core.constants import (
 from .core.download import download_resource
 from .core.factory import parse_web_view_url
 from .core.pages import get_ugc_pages
-from .core.proxy import get_ugc_play
-from .core.schemes import MediaResource, PageData
+from .core.proxy import get_ugc_play, get_ugc_player
+from .core.schemes import GetUGCPlayResponse, GetUGCPlayerResponse, MediaResource, PageData
 from .core.schemes.ugc_play import DashMediaItem, GetUGCPlayDataDash, GetUGCPlayDataDUrlItem
+
+
+logger = logging.getLogger(__name__)
 
 
 async def run(
@@ -37,6 +42,7 @@ async def run(
     reverse_bit_rate: bool = False,
     enable_danmaku: bool = False,
     enable_cover: bool = True,
+    enable_subtitle: bool = True,
     sess_data: Optional[str] = None
 ) -> None:
     dir_p = Path(dir_path)
@@ -58,6 +64,7 @@ async def run(
                 reverse_bit_rate,
                 enable_danmaku,
                 enable_cover,
+                enable_subtitle,
                 sess_data
             )
         )
@@ -77,24 +84,43 @@ async def _download_page(
     reverse_bit_rate: bool = False,
     enable_danmaku: bool = False,
     enable_cover: bool = True,
+    enable_subtitle: bool = True,
     sess_data: Optional[str] = None
 ) -> None:
-    ugc_play = await get_ugc_play(
+    get_ugc_play_coroutine = get_ugc_play(
         cid=page_data.cid,
         bvid=page_data.bvid,
         aid=page_data.aid,
         fnval=FormatNumberValue.get_dash_full_fnval(),
         sess_data=sess_data
     )
+    get_ugc_player_coroutine = get_ugc_player(
+        cid=page_data.cid,
+        bvid=page_data.bvid,
+        aid=page_data.aid,
+        sess_data=sess_data
+    )
+    ugc_play, ugc_player = cast(
+        Tuple[GetUGCPlayResponse, GetUGCPlayerResponse],
+        await asyncio.gather(*[
+            get_ugc_play_coroutine,
+            get_ugc_player_coroutine
+        ])
+    )
+
     if ugc_play.data is None:
+        logger.error(
+            f'No UGC play data for {page_data.cid} of {page_data.bvid}: {ugc_play.message}'
+        )
         raise
 
-    dash = ugc_play.data.dash
-    durl = ugc_play.data.durl
+    dash = ugc_play.data.dash if ugc_play.data is not None else None
+    durl = ugc_play.data.durl if ugc_play.data is not None else None
     video: Optional[MediaResource] = None
     audio: Optional[MediaResource] = None
     if dash is not None:
         video, audio = _get_source_urls_from_dash(
+            page_data.cid,
             dash,
             qn,
             reverse_qn,
@@ -104,26 +130,40 @@ async def _download_page(
             reverse_bit_rate
         )
     else:
-        video = _get_source_urls_from_durl(durl)
+        video = _get_source_urls_from_durl(page_data.cid, durl)
 
     danmaku = MediaResource(
         url=urlparse(URL_WEB_DANMAKU)._replace(
             query=urlencode({'oid': page_data.cid})
         ).geturl(),
-        mime_type=MIME_TYPE_XML
+        mime_type=MIME_TYPE_XML,
+        filename=f'{page_data.cid}{guess_extension(MIME_TYPE_XML) or ""}'
     ) if enable_danmaku else None
 
     cover = MediaResource(
         url=page_data.cover,
-        mime_type=MIME_TYPE_JPEG
+        mime_type=MIME_TYPE_JPEG,
+        filename=f'{page_data.cid}{guess_extension(MIME_TYPE_JPEG) or ""}'
     ) if enable_cover else None
 
+    subtitles = []
+    if ugc_player.data is None:
+        logger.error(
+            f'No UGC player data for {page_data.cid} of {page_data.bvid}: {ugc_player.message}'
+        )
+    elif enable_subtitle:
+        for subtitle in ugc_player.data.subtitle.subtitles:
+            subtitles.append(MediaResource(
+                url='https:' + subtitle.subtitle_url,
+                mime_type=MIME_TYPE_JSON,
+                filename=f'{page_data.cid}.{subtitle.id_field}{guess_extension(MIME_TYPE_JSON) or ""}'
+            ))
+
     task_kwargs = []
-    for item in (video, audio, danmaku, cover):
+    for item in (video, audio, danmaku, cover, *subtitles):
         if item is None:
             continue
-        file_ext = guess_extension(item.mime_type) or ''
-        file_p = dir_path.joinpath(f'{page_data.cid}{file_ext}')
+        file_p = dir_path.joinpath(item.filename)
         kwarg_item = {
             'url': item.url,
             'file': str(file_p)
@@ -139,6 +179,7 @@ async def _download_page(
 
 
 def _get_source_urls_from_dash(
+    cid: int,
     dash: Optional[GetUGCPlayDataDash] = None,
     qn: Optional[int] = None,
     reverse_qn: bool = False,
@@ -162,7 +203,8 @@ def _get_source_urls_from_dash(
     video, *_ = videos
     video_resource = MediaResource(
         url=video.base_url,
-        mime_type=video.mime_type
+        mime_type=video.mime_type,
+        filename=f'{cid}{guess_extension(video.mime_type) or ""}'
     )
 
     audios: List[DashMediaItem] = []
@@ -186,13 +228,15 @@ def _get_source_urls_from_dash(
     audio, *_ = audios
     audio_resource = MediaResource(
         url=audio.base_url,
-        mime_type=audio.mime_type
+        mime_type=audio.mime_type,
+        filename=f'{cid}{guess_extension(audio.mime_type) or ""}'
     )
 
     return video_resource, audio_resource
 
 
 def _get_source_urls_from_durl(
+    cid: int,
     durl: Optional[List[GetUGCPlayDataDUrlItem]] = None
 ) -> MediaResource:
     """
@@ -204,7 +248,8 @@ def _get_source_urls_from_durl(
     video, *_ = durl
     video_resource = MediaResource(
         url=video.url,
-        mime_type=MIME_TYPE_VIDEO_MP4
+        mime_type=MIME_TYPE_VIDEO_MP4,
+        filename=f'{cid}{guess_extension(MIME_TYPE_VIDEO_MP4) or ""}'
     )
     return video_resource
 
