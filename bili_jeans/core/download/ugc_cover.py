@@ -7,7 +7,7 @@ from typing import Optional
 
 from .download_task import (
     BaseCoroutineDownloadTask,
-    GeneralCoroutineDownloadTask
+    StreamDownloadTask
 )
 from ..constants import MIME_TYPE_JPEG
 from ..schemes import PageData
@@ -23,7 +23,7 @@ def create_cover_task(
     filename = f'{page_data.bvid}/{page_data.cid}{guess_extension(mime_type) or ""}'
     file_p = dir_path.joinpath(filename)
 
-    download_task = GeneralCoroutineDownloadTask(
+    download_task = StreamDownloadTask(
         url=url,
         file=str(file_p)
     )

@@ -6,7 +6,7 @@ from mimetypes import guess_extension
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-from .download_task import BaseCoroutineDownloadTask, GeneralCoroutineDownloadTask
+from .download_task import BaseCoroutineDownloadTask, StreamDownloadTask
 from ..constants import (
     CodecId,
     MIME_TYPE_VIDEO_MP4,
@@ -57,7 +57,7 @@ def create_video_task(
     filename = f'{page_data.bvid}/{page_data.cid}{guess_extension(mime_type) or ""}'
     file_p = dir_path.joinpath(filename)
 
-    download_task = GeneralCoroutineDownloadTask(
+    download_task = StreamDownloadTask(
         url=url,
         file=str(file_p)
     )

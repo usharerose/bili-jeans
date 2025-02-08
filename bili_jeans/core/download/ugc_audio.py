@@ -8,7 +8,7 @@ from typing import List, Optional, Tuple
 
 from .download_task import (
     BaseCoroutineDownloadTask,
-    GeneralCoroutineDownloadTask
+    StreamDownloadTask
 )
 from ..constants import BitRateId
 from ..utils import filter_avail_quality_id
@@ -50,7 +50,7 @@ def create_audio_task(
     filename = f'{page_data.bvid}/{page_data.cid}{guess_extension(mime_type) or ""}'
     file_p = dir_path.joinpath(filename)
 
-    download_task = GeneralCoroutineDownloadTask(
+    download_task = StreamDownloadTask(
         url=url,
         file=str(file_p)
     )

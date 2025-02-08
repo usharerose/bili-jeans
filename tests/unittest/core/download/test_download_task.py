@@ -1,6 +1,6 @@
 from unittest.mock import patch, AsyncMock
 
-from bili_jeans.core.download.download_task import GeneralCoroutineDownloadTask
+from bili_jeans.core.download.download_task import StreamDownloadTask
 from tests.utils import MockAsyncIterator
 
 
@@ -15,7 +15,7 @@ async def test_general_download_task_run(mock_get_req, mock_file_p, mock_async_o
     mock_get_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
-    download_task = GeneralCoroutineDownloadTask(
+    download_task = StreamDownloadTask(
         url=sample_url,
         file=sample_file
     )
