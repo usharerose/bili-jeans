@@ -1,9 +1,9 @@
 """
-Utilities
+resource quality
 """
 from typing import Optional, Set, Type
 
-from .constants import QualityId
+from ...core.constants import QualityId
 
 
 def filter_avail_quality_id(

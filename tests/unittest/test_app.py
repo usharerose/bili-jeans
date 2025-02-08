@@ -304,6 +304,7 @@ async def test_run_disable_cover(
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
 @patch('bili_jeans.core.download.download_task.Path')
+@patch('bili_jeans.core.download.download_task.convert_to_srt')
 @patch('bili_jeans.core.download.download_task.aiohttp.ClientSession.get')
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
@@ -315,6 +316,7 @@ async def test_run_with_subtitle(
     mock_get_ugc_play_resp_req,
     mock_get_ugc_player_resp_req,
     mock_get_resource_req,
+    mock_convert_to_srt,
     mock_file_p,
     mock_async_open
 ):
@@ -325,6 +327,7 @@ async def test_run_with_subtitle(
     mock_get_ugc_play_resp_req.return_value = DATA_PLAY_WITH_SUBTITLE
     mock_get_ugc_player_resp_req.return_value = DATA_PLAYER_WITH_SUBTITLE
     mock_get_resource_req.return_value.__aenter__.return_value.content.iter_chunked = MockAsyncIterator
+    mock_convert_to_srt.return_value = b''
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
@@ -335,5 +338,7 @@ async def test_run_with_subtitle(
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video, audio, cover, subtitle (zh-CN and ai-zh) and danmaku separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 6
+    # download video, audio, cover,
+    # subtitle (zh-CN and ai-zh) and their SRT format,
+    # and danmaku separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 8

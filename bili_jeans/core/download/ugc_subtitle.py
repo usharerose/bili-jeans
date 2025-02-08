@@ -8,7 +8,8 @@ from typing import List, Optional
 
 from .download_task import (
     BaseCoroutineDownloadTask,
-    GeneralCoroutineDownloadTask
+    StreamDownloadTask,
+    SRTSubtitleDownloadTask
 )
 from ..constants import MIME_TYPE_JSON
 from ..schemes import GetUGCPlayerResponse, PageData
@@ -36,11 +37,20 @@ def create_subtitle_tasks(
     for subtitle in ugc_player.data.subtitle.subtitles:
         url = 'https:' + subtitle.subtitle_url
         mime_type = MIME_TYPE_JSON
-        filename = f'{page_data.bvid}/{page_data.cid}.{subtitle.id_field}{guess_extension(mime_type) or ""}'
-        file_p = dir_path.joinpath(filename)
-        download_task = GeneralCoroutineDownloadTask(
+        filename_wo_ext = f'{page_data.bvid}/{page_data.cid}.{subtitle.id_field}'
+
+        raw_filename = f'{filename_wo_ext}{guess_extension(mime_type) or ""}'
+        raw_file_p = dir_path.joinpath(raw_filename)
+        download_raw_task = StreamDownloadTask(
             url=url,
-            file=str(file_p)
+            file=str(raw_file_p)
         )
-        download_tasks.append(download_task)
+        srt_filename = f'{filename_wo_ext}.srt'
+        srt_file_p = dir_path.joinpath(srt_filename)
+        download_srt_task = SRTSubtitleDownloadTask(
+            url=url,
+            file=str(srt_file_p)
+        )
+
+        download_tasks.extend([download_raw_task, download_srt_task])
     return download_tasks

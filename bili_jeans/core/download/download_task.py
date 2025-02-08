@@ -8,6 +8,7 @@ import aiofile
 import aiohttp
 
 from ..constants import CHUNK_SIZE, HEADERS
+from ..utils import convert_to_srt
 
 
 class BaseCoroutineDownloadTask(ABC):
@@ -61,7 +62,27 @@ class BaseCoroutineDownloadTask(ABC):
         pass
 
 
-class GeneralCoroutineDownloadTask(BaseCoroutineDownloadTask):
+class StreamDownloadTask(BaseCoroutineDownloadTask):
+
+    def __init__(
+        self,
+        url: str,
+        file: str
+    ) -> None:
+        super().__init__(url, file, is_stream=True)
 
     def post_process_content(self, content: bytes) -> bytes:
         return content
+
+
+class SRTSubtitleDownloadTask(BaseCoroutineDownloadTask):
+
+    def __init__(
+        self,
+        url: str,
+        file: str
+    ) -> None:
+        super().__init__(url, file, is_stream=False)
+
+    def post_process_content(self, content: bytes) -> bytes:
+        return convert_to_srt(content)
