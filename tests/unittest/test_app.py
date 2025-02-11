@@ -1,7 +1,7 @@
 import json
 from unittest.mock import patch, AsyncMock
 
-from bili_jeans.app import run
+from bili_jeans.app import download
 from bili_jeans.core.schemes import WebViewMetaData
 from tests.utils import MockAsyncIterator, MOCK_SESS_DATA
 
@@ -65,7 +65,7 @@ async def test_run(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         sess_data=MOCK_SESS_DATA
@@ -101,7 +101,7 @@ async def test_run_with_flac(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV13ht2ejE1S/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         sess_data=MOCK_SESS_DATA
@@ -137,7 +137,7 @@ async def test_run_with_dolby(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV13L4y1K7th/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         sess_data=MOCK_SESS_DATA
@@ -173,7 +173,7 @@ async def test_run_with_declared_quality(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         qn=74,
@@ -213,7 +213,7 @@ async def test_run_for_paid_ugc_without_privilege(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV1Ys421M7YM/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         qn=74,
@@ -254,7 +254,7 @@ async def test_run_enable_danmaku(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         enable_danmaku=True,
@@ -291,7 +291,7 @@ async def test_run_disable_cover(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         enable_cover=False,
@@ -331,7 +331,7 @@ async def test_run_with_subtitle(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await run(
+    await download(
         url='https://www.bilibili.com/video/BV1Et4y1r7Eu/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         dir_path='/tmp',
         enable_danmaku=True,
