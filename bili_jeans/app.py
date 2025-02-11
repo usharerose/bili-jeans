@@ -23,7 +23,7 @@ from .core.schemes import GetUGCPlayResponse, GetUGCPlayerResponse, PageData
 logger = logging.getLogger(__name__)
 
 
-async def run(
+async def download(
     url: str,
     dir_path: str,
     qn: Optional[int] = None,
