@@ -2,14 +2,13 @@
 create download task for video of UGC page
 """
 import logging
-from mimetypes import guess_extension
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 from .download_task import BaseCoroutineDownloadTask, StreamDownloadTask
 from ..constants import (
     CodecId,
-    MIME_TYPE_VIDEO_MP4,
+    FILE_EXT_MP4,
     QualityNumber
 )
 from ..schemes import GetUGCPlayResponse, PageData
@@ -39,7 +38,7 @@ def create_video_task(
         return None
 
     if ugc_play.data.dash is not None:
-        url, mime_type = _get_video_from_dash(
+        url = _get_video_from_dash(
             ugc_play.data.dash,
             qn,
             reverse_qn,
@@ -47,14 +46,14 @@ def create_video_task(
             reverse_codec
         )
     elif ugc_play.data.durl is not None:
-        url, mime_type = _get_video_from_durl(ugc_play.data.durl)
+        url = _get_video_from_durl(ugc_play.data.durl)
     else:
         logger.error(
             f'No any UGC video data for {page_data.cid} of {page_data.bvid}'
         )
         return None
 
-    filename = f'{page_data.bvid}/{page_data.cid}{guess_extension(mime_type) or ""}'
+    filename = f'{page_data.bvid}/{page_data.cid}{FILE_EXT_MP4}'
     file_p = dir_path.joinpath(filename)
 
     download_task = StreamDownloadTask(
@@ -70,7 +69,7 @@ def _get_video_from_dash(
     reverse_qn: bool = False,
     codec_id: Optional[int] = None,
     reverse_codec: bool = False
-) -> Tuple[str, str]:
+) -> str:
     videos = dash.video
 
     avail_qn_set = set([video.id_field for video in videos])
@@ -83,15 +82,15 @@ def _get_video_from_dash(
     videos = [video for video in videos if video.codecid == codec_id]
     video, *_ = videos
 
-    return video.base_url, video.mime_type
+    return video.base_url
 
 
 def _get_video_from_durl(
     durl: List[GetUGCPlayDataDUrlItem]
-) -> Tuple[str, str]:
+) -> str:
     """
     When the resource is unpurchased but can be previewed,
     would return it via durl
     """
     video, *_ = durl
-    return video.url, MIME_TYPE_VIDEO_MP4
+    return video.url

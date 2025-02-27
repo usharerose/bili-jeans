@@ -2,15 +2,14 @@
 create download task for audio of UGC page
 """
 import logging
-from mimetypes import guess_extension
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 from .download_task import (
     BaseCoroutineDownloadTask,
     StreamDownloadTask
 )
-from ..constants import BitRateId
+from ..constants import BitRateId, FILE_EXT_M4A
 from ..utils import filter_avail_quality_id
 from ..schemes import GetUGCPlayResponse, PageData
 from ..schemes.ugc_play import DashMediaItem, GetUGCPlayDataDash
@@ -36,7 +35,7 @@ def create_audio_task(
         return None
 
     if ugc_play.data.dash is not None:
-        url, mime_type = _get_audio_from_dash(
+        url = _get_audio_from_dash(
             ugc_play.data.dash,
             bit_rate_id,
             reverse_bit_rate
@@ -47,7 +46,7 @@ def create_audio_task(
         )
         return None
 
-    filename = f'{page_data.bvid}/{page_data.cid}{guess_extension(mime_type) or ""}'
+    filename = f'{page_data.bvid}/{page_data.cid}{FILE_EXT_M4A}'
     file_p = dir_path.joinpath(filename)
 
     download_task = StreamDownloadTask(
@@ -61,7 +60,7 @@ def _get_audio_from_dash(
     dash: GetUGCPlayDataDash,
     bit_rate_id: Optional[int] = None,
     reverse_bit_rate: bool = False
-) -> Tuple[str, str]:
+) -> str:
     audios: List[DashMediaItem] = []
     if dash.audio is not None:
         audios.extend(dash.audio)
@@ -82,4 +81,4 @@ def _get_audio_from_dash(
     audios = [audio for audio in audios if audio.id_field == bit_rate_id]
     audio, *_ = audios
 
-    return audio.base_url, audio.mime_type
+    return audio.base_url

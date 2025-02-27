@@ -2,7 +2,6 @@
 create download task for subtitle of UGC page
 """
 import logging
-from mimetypes import guess_extension
 from pathlib import Path
 from typing import List, Optional
 
@@ -11,7 +10,7 @@ from .download_task import (
     StreamDownloadTask,
     SRTSubtitleDownloadTask
 )
-from ..constants import MIME_TYPE_JSON
+from ..constants import FILE_EXT_JSON, FILE_EXT_SRT
 from ..schemes import GetUGCPlayerResponse, PageData
 
 
@@ -36,16 +35,15 @@ def create_subtitle_tasks(
 
     for subtitle in ugc_player.data.subtitle.subtitles:
         url = 'https:' + subtitle.subtitle_url
-        mime_type = MIME_TYPE_JSON
         filename_wo_ext = f'{page_data.bvid}/{page_data.cid}.{subtitle.id_field}'
 
-        raw_filename = f'{filename_wo_ext}{guess_extension(mime_type) or ""}'
+        raw_filename = f'{filename_wo_ext}{FILE_EXT_JSON}'
         raw_file_p = dir_path.joinpath(raw_filename)
         download_raw_task = StreamDownloadTask(
             url=url,
             file=str(raw_file_p)
         )
-        srt_filename = f'{filename_wo_ext}.srt'
+        srt_filename = f'{filename_wo_ext}{FILE_EXT_SRT}'
         srt_file_p = dir_path.joinpath(srt_filename)
         download_srt_task = SRTSubtitleDownloadTask(
             url=url,
