@@ -24,6 +24,14 @@ class BaseCoroutineDownloadTask(ABC):
         self._file_p = Path(file)
         self._is_stream = is_stream
 
+    @property
+    def url(self) -> str:
+        return self._url
+
+    @property
+    def file(self) -> str:
+        return str(self._file_p)
+
     async def run(self) -> None:
         if self._is_stream:
             await self.download_stream()
