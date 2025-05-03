@@ -1,7 +1,7 @@
 import json
 from unittest.mock import patch, AsyncMock
 
-from bili_jeans.app import download
+from bili_jeans.cli.download import run
 from bili_jeans.core.schemes import WebViewMetaData
 from tests.utils import MockAsyncIterator, MOCK_SESS_DATA
 
@@ -45,7 +45,7 @@ with open('tests/data/ugc_player/ugc_player_BV1Et4y1r7Eu.json', 'r') as fp:
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 async def test_run(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -65,14 +65,14 @@ async def test_run(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
+        directory='/tmp',
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video, audio and cover separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
+    # download video, audio separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
 
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
@@ -81,7 +81,7 @@ async def test_run(
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 async def test_run_with_flac(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -101,14 +101,14 @@ async def test_run_with_flac(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV13ht2ejE1S/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
+        directory='/tmp',
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video, audio and cover separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
+    # download video, audio separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
 
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
@@ -117,7 +117,7 @@ async def test_run_with_flac(
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 async def test_run_with_dolby(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -137,14 +137,14 @@ async def test_run_with_dolby(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV13L4y1K7th/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
+        directory='/tmp',
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video, audio and cover separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
+    # download video, audio separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
 
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
@@ -153,7 +153,7 @@ async def test_run_with_dolby(
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 async def test_run_with_declared_quality(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -173,9 +173,9 @@ async def test_run_with_declared_quality(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
+        directory='/tmp',
         qn=74,
         reverse_qn=True,
         codec_id=7,
@@ -183,8 +183,8 @@ async def test_run_with_declared_quality(
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video, audio and cover separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
+    # download video, audio separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
 
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
@@ -193,7 +193,7 @@ async def test_run_with_declared_quality(
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 async def test_run_for_paid_ugc_without_privilege(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -213,9 +213,9 @@ async def test_run_for_paid_ugc_without_privilege(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV1Ys421M7YM/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
+        directory='/tmp',
         qn=74,
         reverse_qn=True,
         codec_id=7,
@@ -224,8 +224,8 @@ async def test_run_for_paid_ugc_without_privilege(
     )
 
     # the resource for preview is in durl instead of dash
-    # which has video and audio separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
+    # which has one resource combined with both video and audio
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 1
 
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
@@ -234,7 +234,7 @@ async def test_run_for_paid_ugc_without_privilege(
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 async def test_run_enable_danmaku(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -254,15 +254,15 @@ async def test_run_enable_danmaku(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
+        directory='/tmp',
         enable_danmaku=True,
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video, audio, cover and danmaku separately
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 4
+    # download video, audio and danmaku separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
@@ -271,8 +271,8 @@ async def test_run_enable_danmaku(
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
-async def test_run_disable_cover(
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
+async def test_run_enable_cover(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
     mock_get_ugc_play_resp_req,
@@ -291,15 +291,15 @@ async def test_run_disable_cover(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
-        enable_cover=False,
+        directory='/tmp',
+        enable_cover=True,
         sess_data=MOCK_SESS_DATA
     )
 
-    # download video and audio separately without cover
-    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 2
+    # download video, audio and cover separately
+    assert mock_async_open.return_value.__aenter__.return_value.write.call_count == 3
 
 
 @patch('bili_jeans.core.download.download_task.aiofile.async_open')
@@ -309,7 +309,7 @@ async def test_run_disable_cover(
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 async def test_run_with_subtitle(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -331,10 +331,12 @@ async def test_run_with_subtitle(
     mock_file_p.return_value.parent.return_value.mkdir.return_value = None
     mock_async_open.return_value.__aenter__.return_value.write = AsyncMock()
 
-    await download(
+    await run(
         url='https://www.bilibili.com/video/BV1Et4y1r7Eu/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-        dir_path='/tmp',
+        directory='/tmp',
         enable_danmaku=True,
+        enable_cover=True,
+        enable_subtitle=True,
         sess_data=MOCK_SESS_DATA
     )
 

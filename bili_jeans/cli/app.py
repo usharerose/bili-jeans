@@ -2,33 +2,71 @@
 Command-Line interface
 """
 import asyncio
-import click
-from typing import Optional
+import os
+from typing import Any, List, Optional
 
-from .app import download
-from .core.constants import CodecId, QualityNumber
+import click
+from click import Context, Parameter
+
+from .download import run as run_download
+from ..core.constants import BitRateId, CodecId, QualityNumber
+from ..core.log import config_logging, LOG_MODE_CLI
+
+
+class IntListParamType(click.ParamType):
+
+    name = 'integer_list'
+
+    def convert(
+        self,
+        value: Any,
+        param: Optional[Parameter],
+        ctx: Optional[Context]
+    ) -> Optional[List[int]]:
+        try:
+            if not value:
+                return None
+            return [int(x.strip()) for x in value.split(',')]
+        except ValueError:
+            self.fail(
+                f'"{value}" is not a valid comma-separated integer list',
+                param,
+                ctx
+            )
+
+
+INT_LIST = IntListParamType()
 
 
 @click.group()
 def cli():
+    config_logging(mode=LOG_MODE_CLI)
     pass
 
 
 @cli.command(name='download')
-@click.option(
-    '--url',
+@click.argument(
+    'URL',
     type=str,
-    required=True,
-    help='URL of video'
+    required=True
 )
 @click.option(
-    '--dir-path',
+    '-d',
+    '--directory',
     type=str,
-    required=True,
+    default=os.getcwd(),
     help='Directory where video would be saved'
 )
 @click.option(
-    '--qn',
+    '-p',
+    '--pages',
+    type=INT_LIST,
+    default=None,
+    help='Selected pages'
+)
+@click.option(
+    '-q',
+    '--quality-number',
     default=None,
     type=click.Choice([
         str(value.quality_id)
@@ -60,7 +98,10 @@ def cli():
 @click.option(
     '--bit-rate-id',
     default=None,
-    type=int,
+    type=click.Choice([
+        str(value.quality_id)
+        for _, value in BitRateId.__members__.items()
+    ]),
     help='Bit rate ID of video'
 )
 @click.option(
@@ -93,10 +134,11 @@ def cli():
     type=str,
     help='Session data as personal certification'
 )
-def download_command(
+def download(
     url: str,
-    dir_path: str,
-    qn: Optional[int] = None,
+    directory: str,
+    pages: Optional[List[int]] = None,
+    quality_number: Optional[int] = None,
     reverse_qn: bool = False,
     codec_id: Optional[int] = None,
     reverse_codec: bool = False,
@@ -107,10 +149,11 @@ def download_command(
     enable_subtitle: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
-    asyncio.run(download(
+    asyncio.run(run_download(
         url=url,
-        dir_path=dir_path,
-        qn=qn,
+        directory=directory,
+        page_indexes=pages,
+        qn=quality_number,
         reverse_qn=reverse_qn,
         codec_id=codec_id,
         reverse_codec=reverse_codec,
@@ -121,7 +164,3 @@ def download_command(
         enable_subtitle=enable_subtitle,
         sess_data=sess_data
     ))
-
-
-if __name__ == '__main__':
-    cli()
