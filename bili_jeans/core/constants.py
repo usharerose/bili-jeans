@@ -34,6 +34,11 @@ URL_WEB_UGC_VIEW = 'https://api.bilibili.com/x/web-interface/view'
 URL_WEB_DANMAKU = 'https://api.bilibili.com/x/v1/dm/list.so'
 
 
+URL_WEB_HOST = 'https://www.bilibili.com'
+URL_WEB_NAMESPACE_UGC = 'video'
+URL_SPACE_HOST = 'https://space.bilibili.com'
+
+
 class QualityItem(NamedTuple):
 
     quality_id: int

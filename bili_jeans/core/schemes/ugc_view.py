@@ -2,10 +2,16 @@
 Scheme definition of the response from https://api.bilibili.com/x/web-interface/wbi/view
 """
 from typing import List, Optional
+from urllib.parse import urlparse, urlunparse
 
 from pydantic import BaseModel, Field
 
 from .base import BaseResponseModel
+from ..constants import (
+    URL_SPACE_HOST,
+    URL_WEB_HOST,
+    URL_WEB_NAMESPACE_UGC
+)
 
 
 class GetUGCViewDataOwner(BaseModel):
@@ -15,6 +21,18 @@ class GetUGCViewDataOwner(BaseModel):
     face: str  # Profile icon's source URL
     mid: int   # User ID
     name: str  # User name
+
+    @property
+    def homepage_url(self) -> str:
+        unparsed_base = urlparse(URL_SPACE_HOST)
+        return urlunparse((
+            unparsed_base.scheme,
+            unparsed_base.netloc,
+            f'{self.mid}',
+            '',
+            None,
+            ''
+        ))
 
 
 class GetUGCViewPagesItem(BaseModel):
@@ -96,6 +114,18 @@ class GetUGCViewData(BaseModel):
     pubdate: int                                          # Unix timestamp when video published (audited)
     title: str                                            # Title of video
     ugc_season: Optional[GetUGCViewDataUGCSeason] = None  # related UGC season's info with other videos
+
+    @property
+    def view_url(self) -> str:
+        unparsed_base = urlparse(URL_WEB_HOST)
+        return urlunparse((
+            unparsed_base.scheme,
+            unparsed_base.netloc,
+            '/'.join([*(URL_WEB_NAMESPACE_UGC.split('/')), self.bvid]),
+            '',
+            None,
+            ''
+        ))
 
 
 class GetUGCViewResponse(BaseResponseModel):
