@@ -16,6 +16,7 @@ class PageData(BaseModel):
     """
     standard metadata of page which is the finest resource from Bilibili
     """
+    idx: int
     aid: Optional[int] = None
     bvid: Optional[str] = None
     cid: int
