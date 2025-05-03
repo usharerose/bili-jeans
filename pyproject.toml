@@ -11,6 +11,7 @@ aiofile = "3.8.8"
 aiohttp = "3.11.11"
 click = "8.1.8"
 pydantic = "2.10.5"
+tzlocal = "5.3.1"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "7.1.1"
