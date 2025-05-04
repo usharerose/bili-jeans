@@ -60,7 +60,7 @@ async def run(
     enable_cover: bool = False,
     enable_subtitle: bool = False,
     sess_data: Optional[str] = None
-):
+) -> None:
     view_meta = await _get_view_meta_by_url(url)
     if view_meta is None:
         return
@@ -70,26 +70,22 @@ async def run(
     dir_p = Path(directory)
     assert dir_p.is_dir() is True  # given path should be a directory
 
-    tasks = [
-        asyncio.create_task(
-            _download_page(
-                page,
-                dir_p,
-                qn,
-                reverse_qn,
-                codec_id,
-                reverse_codec,
-                bit_rate_id,
-                reverse_bit_rate,
-                enable_danmaku,
-                enable_cover,
-                enable_subtitle,
-                sess_data
-            )
+    for page in pages:
+        await _download_page(
+            page,
+            dir_p,
+            qn,
+            reverse_qn,
+            codec_id,
+            reverse_codec,
+            bit_rate_id,
+            reverse_bit_rate,
+            enable_danmaku,
+            enable_cover,
+            enable_subtitle,
+            sess_data
         )
-        for page in pages
-    ]
-    _ = await asyncio.gather(*tasks)
+    logger.info('All pages downloaded')
 
 
 @split_line_wrapper
@@ -172,6 +168,7 @@ async def _get_pages(
     return pages
 
 
+@split_line_wrapper
 async def _download_page(
     page_data: PageData,
     dir_path: Path,
@@ -186,6 +183,7 @@ async def _download_page(
     enable_subtitle: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
+    logger.info(f'Downloading page {page_data.idx}...')
     ugc_play, ugc_player = await _get_page_resources(
         page_data,
         sess_data
@@ -213,8 +211,13 @@ async def _download_page(
         page_data, ugc_player, dir_path
     ) if enable_subtitle else []
 
+
     tasks = [video_task, audio_task, danmaku_task, cover_task, *subtitle_tasks]
-    _ = await asyncio.gather(*[task.run() for task in tasks if task is not None])
+    for task in tasks:
+        if task is not None:
+            _ = await task.run()
+    logger.info(f'Downloaded page {page_data.idx} succeed')
+    return None
 
 
 async def _get_page_resources(

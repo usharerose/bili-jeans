@@ -12,7 +12,7 @@ from ..constants import (
     QualityNumber
 )
 from ..schemes import GetUGCPlayResponse, PageData
-from ..schemes.ugc_play import GetUGCPlayDataDash, GetUGCPlayDataDUrlItem
+from ..schemes.ugc_play import GetUGCPlayData, GetUGCPlayDataDash, GetUGCPlayDataDUrlItem
 from ..utils import filter_avail_quality_id
 
 
@@ -46,7 +46,7 @@ def create_video_task(
             reverse_codec
         )
     elif ugc_play.data.durl is not None:
-        url = _get_video_from_durl(ugc_play.data.durl)
+        url = _get_video_from_durl(ugc_play.data)
     else:
         logger.error(
             f'No any UGC video data for {page_data.cid} of {page_data.bvid}'
@@ -82,15 +82,40 @@ def _get_video_from_dash(
     videos = [video for video in videos if video.codecid == codec_id]
     video, *_ = videos
 
+    tips = ' | '.join([
+        item for item in (
+            f'{QualityNumber.from_value(video.id_field).quality_name}',
+            f'{video.width}x{video.height}',
+            f'{CodecId.from_value(video.codecid).quality_name}',
+            f'{video.frame_rate} fps' if video.frame_rate is not None else 'unknown'
+        ) if item is not None
+    ])
+    logger.info(
+        f'[Chosen video stream]: {tips}'
+    )
     return video.base_url
 
 
 def _get_video_from_durl(
-    durl: List[GetUGCPlayDataDUrlItem]
+    ugc_play_data: GetUGCPlayData
 ) -> str:
     """
     When the resource is unpurchased but can be previewed,
     would return it via durl
     """
+    durl = ugc_play_data.durl
+    assert durl is not None
     video, *_ = durl
+
+    tips = ' | '.join([
+        item for item in (
+            f'{QualityNumber.from_value(ugc_play_data.quality).quality_name}',
+            'unknown',
+            f'{CodecId.from_value(ugc_play_data.video_codecid).quality_name}',
+            'unknown'
+        ) if item is not None
+    ])
+    logger.info(
+        f'[Chosen video stream]: {tips}'
+    )
     return video.url

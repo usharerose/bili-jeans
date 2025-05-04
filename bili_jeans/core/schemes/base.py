@@ -28,3 +28,4 @@ class DashMediaItem(BaseModel):
     id_field: int = Field(..., alias='id')
     mime_type: str
     width: int                              # 0 for audio
+    frame_rate: str                         # float-like numeric string, or empty string for audio

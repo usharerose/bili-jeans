@@ -81,4 +81,14 @@ def _get_audio_from_dash(
     audios = [audio for audio in audios if audio.id_field == bit_rate_id]
     audio, *_ = audios
 
+    tips = ' | '.join([
+        item for item in (
+            f'{audio.codecs}',
+            f'{BitRateId.from_value(audio.id_field).quality_name}'
+        ) if item is not None
+    ])
+    logger.info(
+        f'[Chosen audio stream]: {tips}'
+    )
+
     return audio.base_url
