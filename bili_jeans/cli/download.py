@@ -182,8 +182,8 @@ async def _download_page(
     bit_rate_id: Optional[int] = None,
     reverse_bit_rate: bool = False,
     enable_danmaku: bool = False,
-    enable_cover: bool = True,
-    enable_subtitle: bool = True,
+    enable_cover: bool = False,
+    enable_subtitle: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     ugc_play, ugc_player = await _get_page_resources(
