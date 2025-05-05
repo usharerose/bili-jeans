@@ -3,7 +3,7 @@ create download task for audio of UGC page
 """
 import logging
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .download_task import (
     BaseCoroutineDownloadTask,
@@ -92,3 +92,44 @@ def _get_audio_from_dash(
     )
 
     return audio.base_url
+
+
+def list_cli_bit_rate_options(
+    ugc_play: Optional[GetUGCPlayResponse]
+) -> Optional[List[Tuple[str, int]]]:
+    if ugc_play is None:
+        return None
+    if ugc_play.data is None:
+        logger.error(
+            f'No UGC play data: [{ugc_play.code}] {ugc_play.message}'
+        )
+        return None
+
+    if ugc_play.data.dash is None:
+        logger.error('No any UGC audio data')
+        return None
+
+    dash = ugc_play.data.dash
+    audios: List[DashMediaItem] = []
+    if dash.audio is not None:
+        audios.extend(dash.audio)
+    flac = dash.flac
+    if flac is not None and flac.audio is not None:
+        audios.append(flac.audio)
+    dolby = dash.dolby
+    if dolby.audio is not None:
+        audios.extend(dolby.audio)
+
+    codec_id_set = set()
+    result = []
+    counter = 0
+    for audio in audios:
+        if audio.id_field in codec_id_set:
+            continue
+        codec_id_set.add(audio.id_field)
+        result.append((
+            f'{counter + 1}. {BitRateId.from_value(audio.id_field).quality_name}',
+            audio.id_field
+        ))
+        counter += 1
+    return result

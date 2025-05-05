@@ -10,6 +10,7 @@ python = "^3.11"
 aiofile = "3.8.8"
 aiohttp = "3.11.11"
 click = "8.1.8"
+prompt_toolkit = "3.0.51"
 pydantic = "2.10.5"
 tzlocal = "5.3.1"
 

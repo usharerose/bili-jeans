@@ -129,6 +129,13 @@ def cli():
     help='Download subtitle of video'
 )
 @click.option(
+    '-i',
+    '--interactive',
+    is_flag=True,
+    default=False,
+    help='Enable interactive mode for selecting download options'
+)
+@click.option(
     '--sess-data',
     default=None,
     type=str,
@@ -147,8 +154,18 @@ def download(
     enable_danmaku: bool = False,
     enable_cover: bool = False,
     enable_subtitle: bool = False,
+    interactive: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
+    if interactive:
+        asyncio.run(run_download(
+            url=url,
+            directory=directory,
+            sess_data=sess_data,
+            interactive=True
+        ))
+        return None
+
     asyncio.run(run_download(
         url=url,
         directory=directory,

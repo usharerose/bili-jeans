@@ -3,7 +3,7 @@ create download task for video of UGC page
 """
 import logging
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .download_task import BaseCoroutineDownloadTask, StreamDownloadTask
 from ..constants import (
@@ -12,7 +12,7 @@ from ..constants import (
     QualityNumber
 )
 from ..schemes import GetUGCPlayResponse, PageData
-from ..schemes.ugc_play import GetUGCPlayData, GetUGCPlayDataDash, GetUGCPlayDataDUrlItem
+from ..schemes.ugc_play import GetUGCPlayData, GetUGCPlayDataDash
 from ..utils import filter_avail_quality_id
 
 
@@ -82,16 +82,15 @@ def _get_video_from_dash(
     videos = [video for video in videos if video.codecid == codec_id]
     video, *_ = videos
 
-    tips = ' | '.join([
-        item for item in (
-            f'{QualityNumber.from_value(video.id_field).quality_name}',
-            f'{video.width}x{video.height}',
-            f'{CodecId.from_value(video.codecid).quality_name}',
-            f'{video.frame_rate} fps' if video.frame_rate is not None else 'unknown'
-        ) if item is not None
-    ])
+    fmt_fields = [
+        f'{QualityNumber.from_value(video.id_field).quality_name}',
+        f'{video.width}x{video.height}',
+        f'{CodecId.from_value(video.codecid).quality_name}',
+        f'{video.frame_rate} fps' if video.frame_rate is not None else 'unknown'
+    ]
     logger.info(
-        f'[Chosen video stream]: {tips}'
+        f'[Chosen video stream]: '
+        f'{" | ".join([field for field in fmt_fields if field is not None])}'
     )
     return video.base_url
 
@@ -119,3 +118,116 @@ def _get_video_from_durl(
         f'[Chosen video stream]: {tips}'
     )
     return video.url
+
+
+def list_cli_quality_options(
+    ugc_play: Optional[GetUGCPlayResponse]
+) -> Optional[List[Tuple[str, int]]]:
+    if ugc_play is None:
+        return None
+    if ugc_play.data is None:
+        logger.error(
+            f'No UGC play data: [{ugc_play.code}] {ugc_play.message}'
+        )
+        return None
+
+    if ugc_play.data.dash is not None:
+        return _list_all_quality_from_dash(
+            ugc_play.data.dash
+        )
+    if ugc_play.data.durl is not None:
+        return _list_all_quality_from_durl(ugc_play.data)
+
+    logger.error('No any UGC video data')
+    return None
+
+
+def list_cli_codec_qn_filtered_options(
+    qn: int,
+    ugc_play: Optional[GetUGCPlayResponse]
+) -> Optional[List[Tuple[str, int]]]:
+    if ugc_play is None:
+        return None
+    if ugc_play.data is None:
+        logger.error(
+            f'No UGC play data: [{ugc_play.code}] {ugc_play.message}'
+        )
+        return None
+
+    if ugc_play.data.dash is not None:
+        return _list_codec_qn_filtered_from_dash(
+            qn,
+            ugc_play.data.dash
+        )
+    if ugc_play.data.durl is not None:
+        return _list_codec_qn_filtered_from_durl(
+            qn,
+            ugc_play.data
+        )
+
+    logger.error('No any UGC video data')
+    return None
+
+
+def _list_all_quality_from_dash(
+    dash: GetUGCPlayDataDash
+) -> List[Tuple[str, int]]:
+    videos = dash.video
+    qn_set = set()
+    result = []
+    counter = 0
+    for video in videos:
+        if video.id_field in qn_set:
+            continue
+        qn_set.add(video.id_field)
+        result.append((
+            f'{counter + 1}. {QualityNumber.from_value(video.id_field).quality_name}',
+            video.id_field
+        ))
+        counter += 1
+    return result
+
+
+def _list_codec_qn_filtered_from_dash(
+    qn: int,
+    dash: GetUGCPlayDataDash
+) -> Optional[List[Tuple[str, int]]]:
+    videos = [video for video in dash.video if video.id_field == qn]
+    if not videos:
+        return None
+
+    codec_id_set = set()
+    result = []
+    counter = 0
+    for video in videos:
+        if video.codecid in codec_id_set:
+            continue
+        codec_id_set.add(video.codecid)
+        result.append((
+            f'{counter + 1}. {CodecId.from_value(video.codecid).quality_name}',
+            video.codecid
+        ))
+        counter += 1
+    return result
+
+
+def _list_all_quality_from_durl(
+    ugc_play_data: GetUGCPlayData
+) -> List[Tuple[str, int]]:
+    return [(
+        f'1. {QualityNumber.from_value(ugc_play_data.quality).quality_name}',
+        ugc_play_data.quality
+    )]
+
+
+def _list_codec_qn_filtered_from_durl(
+    qn: int,
+    ugc_play_data: GetUGCPlayData
+) -> Optional[List[Tuple[str, int]]]:
+    if ugc_play_data.quality != qn:
+        return None
+
+    return [(
+        f'1. {CodecId.from_value(ugc_play_data.video_codecid).quality_name}',
+        ugc_play_data.video_codecid
+    )]

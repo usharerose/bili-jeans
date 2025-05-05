@@ -2,7 +2,6 @@
 create download task for cover of UGC page
 """
 from pathlib import Path
-from typing import Optional
 
 from .download_task import (
     BaseCoroutineDownloadTask,
@@ -15,7 +14,7 @@ from ..schemes import PageData
 def create_cover_task(
     page_data: PageData,
     dir_path: Path
-) -> Optional[BaseCoroutineDownloadTask]:
+) -> BaseCoroutineDownloadTask:
     url = page_data.cover
 
     filename = f'{page_data.bvid}/{page_data.cid}{FILE_EXT_JPG}'

@@ -2,7 +2,6 @@
 create download task for danmaku of UGC page
 """
 from pathlib import Path
-from typing import Optional
 from urllib.parse import urlencode, urlparse
 
 from .download_task import (
@@ -19,7 +18,7 @@ from ..schemes import PageData
 def create_danmaku_task(
     page_data: PageData,
     dir_path: Path
-) -> Optional[BaseCoroutineDownloadTask]:
+) -> BaseCoroutineDownloadTask:
     url = urlparse(URL_WEB_DANMAKU)._replace(
         query=urlencode({'oid': page_data.cid})
     ).geturl()
