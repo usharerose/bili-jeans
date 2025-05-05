@@ -21,7 +21,7 @@ with open('tests/data/ugc_player/ugc_player_BV1X54y1C74U.json', 'r') as fp:
 @patch('bili_jeans.core.proxy.get_ugc_player_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_play_response', new_callable=AsyncMock)
 @patch('bili_jeans.core.proxy.get_ugc_view_response', new_callable=AsyncMock)
-@patch('bili_jeans.app.parse_web_view_url', new_callable=AsyncMock)
+@patch('bili_jeans.cli.download.parse_web_view_url', new_callable=AsyncMock)
 def test_download(
     mock_parse_web_view_url,
     mock_get_ugc_view_resp_req,
@@ -46,9 +46,8 @@ def test_download(
         cli,
         [
             'download',
-            '--url',
             'https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
-            '--dir-path',
+            '-d',
             '/tmp'
         ]
     )

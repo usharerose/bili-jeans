@@ -50,5 +50,9 @@ def create_subtitle_tasks(
             file=str(srt_file_p)
         )
 
+        logger.info(
+            f'[Chosen subtitle source]: {subtitle.lan_doc}'
+        )
+
         download_tasks.extend([download_raw_task, download_srt_task])
     return download_tasks

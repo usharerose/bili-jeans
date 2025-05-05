@@ -63,6 +63,7 @@ class GetUGCPlayData(BaseModel):
     """
     'data' field, only defines part of necessary fields
     """
+    video_codecid: int
     dash: Optional[GetUGCPlayDataDash] = None                # raw resources
     durl: Optional[List[GetUGCPlayDataDUrlItem]] = None      # video-audio combined resources
     quality: int

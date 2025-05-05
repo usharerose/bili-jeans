@@ -23,6 +23,7 @@ async def get_ugc_pages(
     assert ugc_view.data is not None
     for item in ugc_view.data.pages:
         page = PageData(
+            idx=item.page,
             aid=ugc_view.data.aid,
             bvid=ugc_view.data.bvid,
             cid=item.cid,

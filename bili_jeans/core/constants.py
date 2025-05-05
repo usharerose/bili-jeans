@@ -34,9 +34,15 @@ URL_WEB_UGC_VIEW = 'https://api.bilibili.com/x/web-interface/view'
 URL_WEB_DANMAKU = 'https://api.bilibili.com/x/v1/dm/list.so'
 
 
+URL_WEB_HOST = 'https://www.bilibili.com'
+URL_WEB_NAMESPACE_UGC = 'video'
+URL_SPACE_HOST = 'https://space.bilibili.com'
+
+
 class QualityItem(NamedTuple):
 
     quality_id: int
+    quality_name: str
     quality_order: int
 
     def __le__(self, other: 'QualityItem') -> bool:  # type: ignore[override]
@@ -83,18 +89,66 @@ class QualityNumber(QualityId):
     | 126   | Dolby       | VIP needed, only support DASH, `fnval&512=512`   |
     | 127   | 8K          | VIP needed, only support DASH, `fnval&1024=1024` |
     """
-    P240 = QualityItem(quality_id=6, quality_order=1)
-    P360 = QualityItem(quality_id=16, quality_order=2)
-    P480 = QualityItem(quality_id=32, quality_order=3)
-    P720 = QualityItem(quality_id=64, quality_order=4)
-    P720_60 = QualityItem(quality_id=74, quality_order=5)
-    P1080 = QualityItem(quality_id=80, quality_order=6)
-    PPLUS_1080 = QualityItem(quality_id=112, quality_order=7)
-    P1080_60 = QualityItem(quality_id=116, quality_order=8)
-    FOUR_K = QualityItem(quality_id=120, quality_order=9)
-    HDR = QualityItem(quality_id=125, quality_order=10)
-    DOLBY = QualityItem(quality_id=126, quality_order=11)
-    EIGHT_K = QualityItem(quality_id=127, quality_order=12)
+    P240 = QualityItem(
+        quality_id=6,
+        quality_name='240P 极速',
+        quality_order=1
+    )
+    P360 = QualityItem(
+        quality_id=16,
+        quality_name='360P 流畅',
+        quality_order=2
+    )
+    P480 = QualityItem(
+        quality_id=32,
+        quality_name='480P 标清',
+        quality_order=3
+    )
+    P720 = QualityItem(
+        quality_id=64,
+        quality_name='720P 高清',
+        quality_order=4
+    )
+    P720_60 = QualityItem(
+        quality_id=74,
+        quality_name='720P60 高帧率',
+        quality_order=5
+    )
+    P1080 = QualityItem(
+        quality_id=80,
+        quality_name='1080P 高清',
+        quality_order=6
+    )
+    PPLUS_1080 = QualityItem(
+        quality_id=112,
+        quality_name='1080P+ 高码率',
+        quality_order=7
+    )
+    P1080_60 = QualityItem(
+        quality_id=116,
+        quality_name='1080P60 高帧率',
+        quality_order=8
+    )
+    FOUR_K = QualityItem(
+        quality_id=120,
+        quality_name='4K 超清',
+        quality_order=9
+    )
+    HDR = QualityItem(
+        quality_id=125,
+        quality_name='HDR 真彩色',
+        quality_order=10
+    )
+    DOLBY = QualityItem(
+        quality_id=126,
+        quality_name='杜比视界',
+        quality_order=11
+    )
+    EIGHT_K = QualityItem(
+        quality_id=127,
+        quality_name='8K 超高清',
+        quality_order=12
+    )
 
     @property
     def is_login_required(self) -> bool:
@@ -174,30 +228,55 @@ class FormatNumberValue(IntEnum):
 # Codec Id #
 ############
 class CodecId(QualityId):
-    """
-    AVC, which is avc1.64001E, not support 8K
-    HEVC, which is hev1.1.6.L120.90
-    AV1, which is av01.0.00M.10.0.110.01.01.01.0
-    """
-    AVC = QualityItem(quality_id=7, quality_order=1)
-    HEVC = QualityItem(quality_id=12, quality_order=2)
-    AV1 = QualityItem(quality_id=13, quality_order=3)
+
+    # AVC doesn't support 8K
+    AVC = QualityItem(
+        quality_id=7,
+        quality_name='AVC',
+        quality_order=1
+    )
+    HEVC = QualityItem(
+        quality_id=12,
+        quality_name='HEVC',
+        quality_order=2
+    )
+    AV1 = QualityItem(
+        quality_id=13,
+        quality_name='AV1',
+        quality_order=3
+    )
 
 
 ###############
 # Bit Rate Id #
 ###############
 class BitRateId(QualityId):
-    """
-    AVC, which is avc1.64001E, not support 8K
-    HEVC, which is hev1.1.6.L120.90
-    AV1, which is av01.0.00M.10.0.110.01.01.01.0
-    """
-    BPS_64K = QualityItem(quality_id=30216, quality_order=1)
-    BPS_132K = QualityItem(quality_id=30232, quality_order=2)
-    BPS_192K = QualityItem(quality_id=30280, quality_order=3)
-    BPS_DOLBY = QualityItem(quality_id=30250, quality_order=4)
-    BPS_HIRES = QualityItem(quality_id=30251, quality_order=5)
+
+    BPS_64K = QualityItem(
+        quality_id=30216,
+        quality_name='64Kbps',
+        quality_order=1
+    )
+    BPS_132K = QualityItem(
+        quality_id=30232,
+        quality_name='132Kbps',
+        quality_order=2
+    )
+    BPS_192K = QualityItem(
+        quality_id=30280,
+        quality_name='192Kbps',
+        quality_order=3
+    )
+    BPS_DOLBY = QualityItem(
+        quality_id=30250,
+        quality_name='Dolby',
+        quality_order=4
+    )
+    BPS_HIRES = QualityItem(
+        quality_id=30251,
+        quality_name='Hi-Res无损',
+        quality_order=5
+    )
 
 
 CHUNK_SIZE: int = int(1024 * 1024)
