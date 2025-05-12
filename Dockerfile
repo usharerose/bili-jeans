@@ -4,7 +4,7 @@ LABEL maintainer="Chaojie Yan <ushareroses@gmail.com>"
 
 # Setup basic Linux packages
 RUN apk update && \
-    apk add --no-cache tini tzdata build-base libffi-dev make && \
+    apk add --no-cache tini tzdata build-base libffi-dev make ffmpeg && \
     apk upgrade && \
     rm -rf /var/cache/apk/*
 
