@@ -48,7 +48,8 @@ def test_download(
             'download',
             'https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
             '-d',
-            '/tmp'
+            '/tmp',
+            '--skip-mux'
         ]
     )
 

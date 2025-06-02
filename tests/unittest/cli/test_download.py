@@ -68,6 +68,7 @@ async def test_run(
     await run(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         directory='/tmp',
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
@@ -104,6 +105,7 @@ async def test_run_with_flac(
     await run(
         url='https://www.bilibili.com/video/BV13ht2ejE1S/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         directory='/tmp',
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
@@ -140,6 +142,7 @@ async def test_run_with_dolby(
     await run(
         url='https://www.bilibili.com/video/BV13L4y1K7th/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         directory='/tmp',
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
@@ -180,6 +183,7 @@ async def test_run_with_declared_quality(
         reverse_qn=True,
         codec_id=7,
         reverse_bit_rate=False,
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
@@ -220,6 +224,7 @@ async def test_run_for_paid_ugc_without_privilege(
         reverse_qn=True,
         codec_id=7,
         reverse_bit_rate=False,
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
@@ -258,6 +263,7 @@ async def test_run_enable_danmaku(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         directory='/tmp',
         enable_danmaku=True,
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
@@ -295,6 +301,7 @@ async def test_run_enable_cover(
         url='https://www.bilibili.com/video/BV1X54y1C74U/?vd_source=eab9f46166d54e0b07ace25e908097ae',
         directory='/tmp',
         enable_cover=True,
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
@@ -337,6 +344,7 @@ async def test_run_with_subtitle(
         enable_danmaku=True,
         enable_cover=True,
         enable_subtitle=True,
+        skip_mux=True,
         sess_data=MOCK_SESS_DATA
     )
 
