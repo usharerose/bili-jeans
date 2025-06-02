@@ -61,6 +61,10 @@ class BaseCoroutineDownloadTask(ABC):
     def post_process_content(self, content: bytes) -> bytes:
         pass
 
+    @property
+    def file_path(self) -> Path:
+        return self._file_p
+
 
 class StreamDownloadTask(BaseCoroutineDownloadTask):
 
