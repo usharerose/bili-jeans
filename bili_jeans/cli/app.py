@@ -129,6 +129,18 @@ def cli():
     help='Download subtitle of video'
 )
 @click.option(
+    '--skip-mux',
+    is_flag=True,
+    default=False,
+    help='Mux video and audio stream'
+)
+@click.option(
+    '--preserve-original',
+    is_flag=True,
+    default=False,
+    help='Preserve original video and audio files'
+)
+@click.option(
     '-i',
     '--interactive',
     is_flag=True,
@@ -154,6 +166,8 @@ def download(
     enable_danmaku: bool = False,
     enable_cover: bool = False,
     enable_subtitle: bool = False,
+    skip_mux: bool = False,
+    preserve_original: bool = False,
     interactive: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
@@ -179,5 +193,7 @@ def download(
         enable_danmaku=enable_danmaku,
         enable_cover=enable_cover,
         enable_subtitle=enable_subtitle,
+        skip_mux=skip_mux,
+        preserve_original=preserve_original,
         sess_data=sess_data
     ))

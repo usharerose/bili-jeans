@@ -13,7 +13,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.shortcuts import print_formatted_text
 from prompt_toolkit.formatted_text import HTML
 
-from ..core.constants import FormatNumberValue
+from ..core.constants import FormatNumberValue, FILE_EXT_MP4
 from ..core.download import (
     create_audio_task,
     create_cover_task,
@@ -25,6 +25,7 @@ from ..core.download import (
     list_cli_quality_options
 )
 from ..core.factory import parse_web_view_url
+from ..core.muxer import mux_streams
 from ..core.pages import get_ugc_pages
 from ..core.proxy import get_ugc_play, get_ugc_player, get_ugc_view
 from ..core.schemes import (
@@ -81,6 +82,8 @@ async def run(
     enable_danmaku: bool = False,
     enable_cover: bool = False,
     enable_subtitle: bool = False,
+    skip_mux: bool = False,
+    preserve_original: bool = False,
     sess_data: Optional[str] = None,
     interactive: bool = False
 ) -> None:
@@ -115,6 +118,8 @@ async def run(
                 enable_danmaku,
                 enable_cover,
                 enable_subtitle,
+                skip_mux,
+                preserve_original,
                 sess_data
             )
         else:
@@ -225,6 +230,8 @@ async def _download_page(
     enable_danmaku: bool = False,
     enable_cover: bool = False,
     enable_subtitle: bool = False,
+    skip_mux: bool = False,
+    preserve_original: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     """
@@ -263,6 +270,28 @@ async def _download_page(
     for task in tasks:
         if task is not None:
             await task.run()
+
+    if not skip_mux:
+        output_file_p = dir_path.joinpath(
+            f'{page_data.bvid}/{page_data.cid}.mux{FILE_EXT_MP4}'
+        )
+        await mux_streams(
+            output_file=str(output_file_p),
+            url=page_data.page_url,
+            title=page_data.title,
+            description=page_data.description,
+            author_name=page_data.owner_name,
+            publish_date=page_data.pubdate,
+            video_file=str(video_task.file_path) if video_task else None,
+            audio_file=str(audio_task.file_path) if audio_task else None,
+            cover_file=str(cover_task.file_path) if cover_task else None,
+            overwrite=True,
+            preserve_original=preserve_original
+        )
+        if not preserve_original and output_file_p.exists():
+            output_file_p.rename(dir_path.joinpath(
+                f'{page_data.bvid}/{page_data.cid}{FILE_EXT_MP4}'
+            ))
 
     logger.info(f'Downloaded page {page_data.idx} succeed')
     return None
