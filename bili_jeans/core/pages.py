@@ -21,7 +21,7 @@ async def get_ugc_pages(
 
     pages = []
     assert ugc_view.data is not None
-    for item in ugc_view.data.pages:
+    for idx, item in enumerate(ugc_view.data.pages):
         page = PageData(
             idx=item.page,
             aid=ugc_view.data.aid,
@@ -29,7 +29,10 @@ async def get_ugc_pages(
             cid=item.cid,
             title=item.part,
             cover=ugc_view.data.pic,
-            duration=item.duration
+            duration=item.duration,
+            description=ugc_view.data.desc if idx == 0 else '',
+            owner_name=ugc_view.data.owner.name,
+            pubdate=ugc_view.data.pubdate
         )
         pages.append(page)
     return pages

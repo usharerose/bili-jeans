@@ -13,7 +13,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.shortcuts import print_formatted_text
 from prompt_toolkit.formatted_text import HTML
 
-from ..core.constants import FormatNumberValue
+from ..core.constants import FormatNumberValue, FILE_EXT_MP4
 from ..core.download import (
     create_audio_task,
     create_cover_task,
@@ -25,6 +25,7 @@ from ..core.download import (
     list_cli_quality_options
 )
 from ..core.factory import parse_web_view_url
+from ..core.muxer import mux_streams
 from ..core.pages import get_ugc_pages
 from ..core.proxy import get_ugc_play, get_ugc_player, get_ugc_view
 from ..core.schemes import (
@@ -81,6 +82,8 @@ async def run(
     enable_danmaku: bool = False,
     enable_cover: bool = False,
     enable_subtitle: bool = False,
+    skip_mux: bool = False,
+    preserve_original: bool = False,
     sess_data: Optional[str] = None,
     interactive: bool = False
 ) -> None:
@@ -115,6 +118,8 @@ async def run(
                 enable_danmaku,
                 enable_cover,
                 enable_subtitle,
+                skip_mux,
+                preserve_original,
                 sess_data
             )
         else:
@@ -225,6 +230,8 @@ async def _download_page(
     enable_danmaku: bool = False,
     enable_cover: bool = False,
     enable_subtitle: bool = False,
+    skip_mux: bool = False,
+    preserve_original: bool = False,
     sess_data: Optional[str] = None
 ) -> None:
     """
@@ -263,6 +270,28 @@ async def _download_page(
     for task in tasks:
         if task is not None:
             await task.run()
+
+    if not skip_mux:
+        output_file_p = dir_path.joinpath(
+            f'{page_data.bvid}/{page_data.cid}.mux{FILE_EXT_MP4}'
+        )
+        await mux_streams(
+            output_file=str(output_file_p),
+            url=page_data.page_url,
+            title=page_data.title,
+            description=page_data.description,
+            author_name=page_data.owner_name,
+            publish_date=page_data.pubdate,
+            video_file=str(video_task.file_path) if video_task else None,
+            audio_file=str(audio_task.file_path) if audio_task else None,
+            cover_file=str(cover_task.file_path) if cover_task else None,
+            overwrite=True,
+            preserve_original=preserve_original
+        )
+        if not preserve_original and output_file_p.exists():
+            output_file_p.rename(dir_path.joinpath(
+                f'{page_data.bvid}/{page_data.cid}{FILE_EXT_MP4}'
+            ))
 
     logger.info(f'Downloaded page {page_data.idx} succeed')
     return None
@@ -334,7 +363,7 @@ async def _download_page_interactively(
     by command-line interaction
     """
     page_label = f'P{page_data.idx}. {page_data.title}'
-    to_download_page = await _ensure_downloading_or_not(page_label)
+    to_download_page = await _ensure_process_or_not(f'download {page_label}')
     if not to_download_page:
         return None
 
@@ -343,39 +372,73 @@ async def _download_page_interactively(
         sess_data
     )
 
-    to_download_video = await _ensure_downloading_or_not('video')
+    to_download_video = await _ensure_process_or_not('download video')
+    video_file_p = None
     if to_download_video:
-        await _download_video_interactively(page_data, ugc_play, dir_path)
+        video_file_p = await _download_video_interactively(
+            page_data, ugc_play, dir_path
+        )
 
-    to_download_audio = await _ensure_downloading_or_not('audio')
+    to_download_audio = await _ensure_process_or_not('download audio')
+    audio_file_p = None
     if to_download_audio:
-        await _download_audio_interactively(page_data, ugc_play, dir_path)
+        audio_file_p = await _download_audio_interactively(
+            page_data, ugc_play, dir_path
+        )
 
-    to_download_danmaku = await _ensure_downloading_or_not('danmaku')
+    to_download_danmaku = await _ensure_process_or_not('download danmaku')
     if to_download_danmaku:
         danmaku_task = create_danmaku_task(page_data, dir_path)
         await danmaku_task.run()
 
-    to_download_cover = await _ensure_downloading_or_not('cover')
+    to_download_cover = await _ensure_process_or_not('download cover')
+    cover_file_p = None
     if to_download_cover:
         cover_task = create_cover_task(page_data, dir_path)
         await cover_task.run()
+        cover_file_p = cover_task.file_path
 
-    to_download_subtitle = await _ensure_downloading_or_not('subtitle')
+    to_download_subtitle = await _ensure_process_or_not('download subtitle')
     if to_download_subtitle:
         subtitle_tasks = create_subtitle_tasks(
             page_data, ugc_player, dir_path
         )
         await asyncio.gather(*[task.run() for task in subtitle_tasks])
 
+    to_mux = await _ensure_process_or_not('mux video and audio')
+    if to_mux:
+        to_preserve_original = await _ensure_process_or_not(
+            'reserve original video and audio files'
+        )
+        output_file_p = dir_path.joinpath(
+            f'{page_data.bvid}/{page_data.cid}.mux{FILE_EXT_MP4}'
+        )
+        await mux_streams(
+            output_file=str(output_file_p),
+            url=page_data.page_url,
+            title=page_data.title,
+            description=page_data.description,
+            author_name=page_data.owner_name,
+            publish_date=page_data.pubdate,
+            video_file=str(video_file_p) if video_file_p else None,
+            audio_file=str(audio_file_p) if audio_file_p else None,
+            cover_file=str(cover_file_p) if cover_file_p else None,
+            overwrite=True,
+            preserve_original=to_preserve_original
+        )
+        if not to_preserve_original and output_file_p.exists():
+            output_file_p.rename(dir_path.joinpath(
+                f'{page_data.bvid}/{page_data.cid}{FILE_EXT_MP4}'
+            ))
+
     logger.info(f'Downloaded P{page_data.idx} succeed')
     return None
 
 
-async def _ensure_downloading_or_not(
-    target_name: str
+async def _ensure_process_or_not(
+    process_name: str
 ) -> bool:
-    logger.info(f'Whether download {target_name} or not?')
+    logger.info(f'Whether {process_name} or not?')
 
     result = await asyncio.get_event_loop().run_in_executor(
         None,
@@ -386,7 +449,7 @@ async def _ensure_downloading_or_not(
         feedback = True
 
     if not feedback:
-        logger.info(f'Skipping downloading {target_name}')
+        logger.info(f'Skipping {process_name}')
     return feedback
 
 
@@ -394,7 +457,7 @@ async def _download_video_interactively(
     page_data: PageData,
     ugc_play: Optional[GetUGCPlayResponse],
     dir_path: Path,
-) -> None:
+) -> Optional[Path]:
     """
     choose the resource
     by quality and codec cascadingly
@@ -410,8 +473,11 @@ async def _download_video_interactively(
         qn,
         codec_id=codec_id
     )
-    if video_task is not None:
-        await video_task.run()
+    if video_task is None:
+        return None
+
+    await video_task.run()
+    return video_task.file_path
 
 
 async def _get_selected_quality_options(
@@ -469,7 +535,7 @@ async def _download_audio_interactively(
     page_data: PageData,
     ugc_play: Optional[GetUGCPlayResponse],
     dir_path: Path,
-) -> None:
+) -> Optional[Path]:
     """
     choose the resource
     by quality and codec cascadingly
@@ -481,8 +547,10 @@ async def _download_audio_interactively(
         dir_path,
         bit_rate_id
     )
-    if audio_task is not None:
-        await audio_task.run()
+    if audio_task is None:
+        return None
+    await audio_task.run()
+    return audio_task.file_path
 
 
 async def _choose_bit_rate(

@@ -25,14 +25,16 @@ class GetUGCViewDataOwner(BaseModel):
     @property
     def homepage_url(self) -> str:
         unparsed_base = urlparse(URL_SPACE_HOST)
-        return urlunparse((
+        parts = (
             unparsed_base.scheme,
             unparsed_base.netloc,
             f'{self.mid}',
             '',
             None,
             ''
-        ))
+        )
+        url = urlunparse(parts)
+        return url
 
 
 class GetUGCViewPagesItem(BaseModel):
